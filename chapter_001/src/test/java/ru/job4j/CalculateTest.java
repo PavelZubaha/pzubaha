@@ -7,7 +7,7 @@ import java.io.ByteArrayOutputStream;
 import java.io.PrintStream;
 
 /**
-*Test/
+*Test.
 *@author Pavel Zubaha (Apximar@gmail.com)
 *@version $Id$
 *@since 0.1
@@ -20,18 +20,9 @@ public class CalculateTest {
 	public void whenAddOneToOneThenTwo() {
 		//asign
 		ByteArrayOutputStream out = new ByteArrayOutputStream();
-		System.setOut (new PrintStream(out));
-		Calculate.main (null);
+		System.setOut(new PrintStream(out));
+		Calculate.main(null);
 		//act
-		
-		assertThat(
-			out.toString(),
-			is(
-				String.format(
-					"Hello Word%s",
-					System.getProperty("line.separator")
-				)
-			)
-		);
+		assertThat(out.toString(), is(String.format("Hello Word%s", System.getProperty("line.separator"))));
 	}
 }
