@@ -18,9 +18,9 @@ public class MaxTest {
 	public void whenSecondValueBiggerThanFirstThenReturnSecond() {
 		//asign
 		Max max = new Max();
-		final double result = max.max(1, 2);
+		//final double result = max.max(1, 2);
 		//act
-		assertThat(result, is(2D));
+		assertThat(max.max(1, 2), is(2D));
 	}
 	/**
 	*Test max.
@@ -29,8 +29,8 @@ public class MaxTest {
 	public void whenFirstValueBiggerThanSecondThenReturnFirst() {
 		//asign
 		Max max = new Max();
-		final double result = max.max(2, 1);
+		//final double result = max.max(2, 1);
 		//act
-		assertThat(result, is(2D));
+		assertThat(max.max(2, 1), is(2D));
 	}
 }
