@@ -2,7 +2,7 @@ package ru.job4j;
 /**.
  *Class contents solution of task 4087
  *@author pzubaha
- *@since 05.03.2017
+ *@since 1
  *@version 1
 */
 public class Calculate {
