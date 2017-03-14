@@ -1,5 +1,5 @@
 /**
-* //TODO add comments.
+* The package contains solutions of job4j.ru corse tasks.
 *
 * @author Pavel Zubaha (mailto:Apximar@gmail.com)
 * @version $Id$
