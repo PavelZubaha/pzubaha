@@ -12,7 +12,17 @@ public class Max {
 	*@param second - second number
 	*@return result
 	*/
-	public double max(int first, int second) {
+	public int max(int first, int second) {
 		return ((first > second) ? first : second);
+	}
+	/**
+	*method return biggest value of 3 numbers.
+	*@param first - first number
+	*@param second - second number
+	*@param third - third number
+	*@return result
+	*/
+	public int max(int first, int second, int third) {
+		return max(max(first, second), third);
 	}
 }
