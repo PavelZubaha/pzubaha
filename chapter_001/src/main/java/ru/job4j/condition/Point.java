@@ -11,7 +11,7 @@ public class Point {
 	/**y coordinate of point.*/
 	private int y;
 	/**
-	*construct return biggest value of two numbers.
+	*construct for point.
 	*@param x - x coordinate,
 	*@param y - y coordinate.
 	*/
