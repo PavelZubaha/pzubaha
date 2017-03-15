@@ -13,11 +13,6 @@ public class Counter {
 	*@return result
 	*/
 	public int add(int start, int finish) {
-		if (start > finish) {
-			int temp = start;
-			start = finish;
-			finish = temp;
-		}
 		if (start % 2 != 0) {
 			start++;
 		}
