@@ -24,4 +24,14 @@ public class ArrayDuplicateTest {
 		String[] expected = {"Hello, ", "World", "!"};
 		assertThat(arrayDuplicate.remove(originalStrings), is(expected));
 	}
+	/**
+	*Test case when array has duplicates.
+	*/
+	@Test
+	public void whenRemoveDuplicatesThenArrayWithoutAllDuplicate() {
+		ArrayDuplicate arrayDuplicate = new ArrayDuplicate();
+		String[] originalStrings = {"a", "a", "a", "a"};
+		String[] expected = {"a"};
+		assertThat(arrayDuplicate.remove(originalStrings), is(expected));
+	}
 }
