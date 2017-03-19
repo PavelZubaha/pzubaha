@@ -25,7 +25,7 @@ public class RotateArrayTest {
 		assertThat(resultArray, is(expectedArray));
 	}
 		/**
-	*Test case when array[2][2].
+	*Test case when array[3][3].
 	*/
 	@Test
 	public void whenArraySideLengthIsTree() {
