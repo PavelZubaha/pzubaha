@@ -15,7 +15,8 @@
 
 	<modules>
 		<module>chapter_001</module>
-	</modules>
+        <module>chapter_002</module>
+    </modules>
 	
 	<dependencies>
         <dependency>
@@ -34,6 +35,14 @@
 	
 	  <build>
         <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.3</version>
+                <configuration>
+                    <compilerVersion>1.8</compilerVersion>
+                </configuration>
+            </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-checkstyle-plugin</artifactId>

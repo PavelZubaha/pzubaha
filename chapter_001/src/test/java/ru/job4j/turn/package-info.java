@@ -4,4 +4,4 @@
 * @version $Id$
 * @since 16.03.17
 */
-package ru.job4j.loop;
+package ru.job4j.turn;
