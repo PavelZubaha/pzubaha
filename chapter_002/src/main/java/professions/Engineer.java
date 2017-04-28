@@ -109,4 +109,24 @@ public class Engineer extends Profession {
 		}
 		return "Index is not correct";
 	}
+	/**
+	 * Method remove task from engineer task list.
+	 * @param task - task that should be removed.
+	 * @return boolean value is task removed?
+	*/
+	public boolean removeTask(String task) {
+		for (int i = 0; i < taskAmount; i++) {
+			if (this.taskList[i] != null && this.taskList[i].equals(task)) {
+				for (int j = i; j < taskAmount - 1; j++) {
+					this.taskList[j] = this.taskList[j + 1];
+					this.solutionList[j] = this.solutionList[j + 1];
+				}
+				this.taskAmount--;
+				this.solutionList[taskAmount] = null;
+				this.taskList[taskAmount] = null;
+				return true;
+			}
+		}
+		return false;
+	}
 }
