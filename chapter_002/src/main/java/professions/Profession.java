@@ -6,7 +6,7 @@ package professions;
  * Representation of professions in the code.
  * Class contains solution of task 6837.
  * @author Pavel Zubaha
- * @since 1
+ * @since 24.04.2017
  * @version 1
 */
 public class Profession extends Person {

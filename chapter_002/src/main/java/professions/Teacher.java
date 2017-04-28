@@ -87,7 +87,7 @@ class Group {
 	*/
 	private String identifier;
 	/**
-	 * Students list of group. Max capacity is 34 students.
+	 * Students list of group. Max capacity is 40 students.
 	*/
 	private Student[] studentsList = new Student[40];
 	/**
