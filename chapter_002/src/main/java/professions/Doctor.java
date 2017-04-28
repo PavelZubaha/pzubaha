@@ -93,7 +93,7 @@ public class Doctor extends Profession {
 	 * @param patient - current patient.
 	 * @return string for writing into journal.
 	*/
-	public String wrightJournal(Patient patient) {
+	public String writeJournal(Patient patient) {
 		String separator = System.getProperty("line.separator");
 		return String.join(separator, Integer.toString(currentPatientIndex), patient.getName(), Integer.toString(patient.getAge()), patient.getDiagnosis(), this.doctorSignature);
 	}
@@ -121,10 +121,17 @@ public class Doctor extends Profession {
 			"Signature: " + this.doctorSignature);
 	}
 	/**
-	 * get currentPatientIndex.
-	 * @return string recipe.
+	 * Get current amount of doctor's patients.
+	 * @return current patient amount.
 	*/
 	public int getPatientIndex() {
 		 return this.currentPatientIndex;
+	}
+	/**
+	 * Get doctor's signature.
+	 * @return doctor signature.
+	*/
+	public String getDoctorSignature() {
+		return this.doctorSignature;
 	}
 }
