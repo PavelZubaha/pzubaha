@@ -1,50 +1,121 @@
 package ru.pzubaha.start;
 
-import ru.pzubaha.models.*;
+import ru.pzubaha.models.Item;
 import java.util.Random;
-
+import java.util.Arrays;
+/**
+ * Chapter 2. OOP.
+ * Lesson 4. Encapsulation.
+ *
+ * Class Tracker implements issue/request tracker functions.
+ * Class contains solution of task 396.
+ *
+ * @author Pavel Zubaha (mailto:Apximar@gmail.com)
+ * @since 02.05.017
+ * @version 2
+ */
 public class Tracker {
-	private Item[] items = new Item[10];
+	/**
+	 * array of items.
+	 */
+	private Item[] items = new Item[100];
+	/**
+	 * current amount of items.
+	 */
 	private int position = 0;
+	/**
+	 * additinal field for generate id.
+	 */
 	private static final Random RN = new Random();
-	
+	/**
+	 * method for add new item example.
+	 * @param item - item.
+	 */
 	public void add(Item item) {
 		item.setId(this.generateId());
 		this.items[position++] = item;
 	}
-	
+	/**
+	 * method for searching item example.
+	 * @param id - id of item that need to find.
+	 * @return the item with unique id or null.
+	 */
 	protected Item findById(String id) {
 		Item result = null;
-		for (Item item : items) {
-			if (item != null && item.getId().equals(id)) {
-				result = item;
-				break;
+		if (id != null) {
+			for (Item item : this.items) {
+				if (item != null && id.equals(item.getId())) {
+					result = item;
+					break;
+				}
 			}
 		}
 		return result;
 	}
+	/**
+	 * method for generate id.
+	 * @return the id.
+	 */
 	private String generateId() {
 		return String.valueOf(System.currentTimeMillis() + RN.nextInt(100));
 	}
+	/**
+	 * method for get all items.
+	 * @return array of items.
+	 */
 	public Item[] getAll() {
 		Item[] result = new Item[this.position];
-		for (int index = 0; index != position; index++) {
+		for (int index = 0; index != this.position; index++) {
 			result[index] = this.items[index];
 		}
 		return result;
 	}
+	/**
+	 * method for update item.
+	 * @param item - item which need to update.
+	 */
 	public void update(Item item) {
-		String id;
-		if(item != null) {
-			id = item.getId();
-			for (int index = 0; index != position; index++) {
-				if (id.equals(items[index].getId())) {
-					items[index] = item;
+		if (item != null) {
+			for (int index = 0; index != this.position; index++) {
+				if (item.getId().equals(this.items[index].getId())) {
+					this.items[index] = item;
+					break;
 				}
 			}
 		}
 	}
+	/**
+	 * method for delete item.
+	 * @param item - item which need to delete.
+	 */
 	public void delete(Item item) {
-		
+		if (item != null) {
+			for (int index = 0; index != this.position; index++) {
+				if (item.getId().equals(this.items[index].getId())) {
+					this.position--;
+					System.arraycopy(this.items, (index + 1), this.items, index, (this.position - index));
+					this.items[this.position] = null;
+					break;
+				}
+			}
+		}
+	}
+	/**
+	 * method for searching item by name.
+	 * @param name - name of needed item.
+	 * @return the array of items with the same name. When there are no items with the needed name return empty array "[]".
+	 */
+	public Item[] findByName(String name) {
+		Item[] resultWhithNulls = new Item[position];
+		int resultIndex = 0;
+		if (name != null) {
+			for (int index = 0; index != this.position; index++) {
+				if (name.equals(this.items[index].getName())) {
+					resultWhithNulls[resultIndex] = this.items[index];
+					resultIndex++;
+				}
+			}
+		}
+		return Arrays.copyOf(resultWhithNulls, resultIndex);
 	}
 }
