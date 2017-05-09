@@ -2,7 +2,6 @@ package ru.pzubaha.start;
 
 import ru.pzubaha.models.Item;
 import java.util.Random;
-import java.util.Arrays;
 /**
  * Chapter 2. OOP.
  * Lesson 4. Encapsulation.
@@ -107,15 +106,19 @@ public class Tracker {
 	 */
 	public Item[] findByName(String name) {
 		Item[] resultWhithNulls = new Item[position];
-		int resultIndex = 0;
+		int resultLength = 0;
 		if (name != null) {
 			for (int index = 0; index != this.position; index++) {
 				if (name.equals(this.items[index].getName())) {
-					resultWhithNulls[resultIndex] = this.items[index];
-					resultIndex++;
+					resultWhithNulls[resultLength] = this.items[index];
+					resultLength++;
 				}
 			}
 		}
-		return Arrays.copyOf(resultWhithNulls, resultIndex);
+		Item[] result = new Item[resultLength];
+		if (resultLength != 0) {
+			System.arraycopy(resultWhithNulls, 0, result, 0, resultLength);
+		}
+		return result;
 	}
 }
