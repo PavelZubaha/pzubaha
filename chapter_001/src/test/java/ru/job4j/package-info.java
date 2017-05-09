@@ -1,5 +1,4 @@
 /**
-* //TODO add comments.
 * Test.
 * @author Pavel Zubaha (mailto:Apximar@gmail.com)
 * @version $Id$
