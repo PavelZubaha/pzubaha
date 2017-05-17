@@ -13,7 +13,7 @@ import ru.pzubaha.models.Item;
  * Solution of task 396.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
- * @since 08.05.2017
+ * @since 17.05.2017
  * @version 2
  */
 public class TrackerTest {
