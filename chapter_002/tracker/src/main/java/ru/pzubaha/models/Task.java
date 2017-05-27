@@ -17,5 +17,6 @@ public class Task extends Item {
 	 * @param desc - description.
 	 */
 	public Task(String name, String desc) {
+		super(name, desc);
 	}
 }

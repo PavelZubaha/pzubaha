@@ -12,4 +12,10 @@ package ru.pzubaha.models;
  * @version 2
  */
 public class Bug extends Item {
+	/**
+	 * default constructor for Bug.
+	 */
+	public Bug() {
+		super();
+	}
 }

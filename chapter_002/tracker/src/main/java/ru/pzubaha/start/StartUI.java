@@ -1,6 +1,7 @@
 package ru.pzubaha.start;
 
-import ru.pzubaha.models.Task;
+
+import ru.pzubaha.gui.TrackerMenu;
 
 /**
  * Chapter 2. OOP.
@@ -15,12 +16,30 @@ import ru.pzubaha.models.Task;
  */
 public class StartUI {
 	/**
+	 * input field.
+	 */
+	private Input input;
+	/**
+	 * Constructor.
+	 * @param input - initialization input in constructor.
+	 */
+	public StartUI(Input input) {
+		this.input = input;
+	}
+	/**
+	 * init - init needed objects(instances).
+	 */
+	public void init() {
+		Tracker tracker = new Tracker();
+		TrackerMenu trackerMenu = new TrackerMenu(this.input, tracker);
+		trackerMenu.run();
+	}
+	/**
 	 * main.
 	 * @param args - args.
 	 */
 	public static void main(String[] args) {
-		Tracker tracker = new Tracker();
-		tracker.add(new Task("New task", "New description"));
-		tracker.add(new Task("Second task", "second description"));
+		Input input = new ConsoleInput();
+		new StartUI(input).init();
 	}
 }

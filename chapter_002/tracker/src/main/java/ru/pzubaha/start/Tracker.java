@@ -39,7 +39,7 @@ public class Tracker {
 	 * @param id - id of item that need to find.
 	 * @return the item with unique id or null.
 	 */
-	protected Item findById(String id) {
+	public Item findById(String id) {
 		Item result = null;
 		if (id != null) {
 			for (Item item : this.items) {
