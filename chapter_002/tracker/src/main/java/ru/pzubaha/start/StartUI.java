@@ -27,6 +27,23 @@ public class StartUI {
 		this.input = input;
 	}
 	/**
+	 * Constructor.
+	 * @param input - initialization input in constructor.
+	 * @param tracker - refernce to tracker instance.
+	 */
+	public StartUI(Tracker tracker, Input input) {
+		this.input = input;
+		this.init(tracker);
+	}
+	/**
+	 * init - init needed objects(instances).
+	 * @param tracker - refernce to tracker instance.
+	 */
+	public void init(Tracker tracker) {
+		TrackerMenu trackerMenu = new TrackerMenu(this.input, tracker);
+		trackerMenu.run();
+	}
+	/**
 	 * init - init needed objects(instances).
 	 */
 	public void init() {
