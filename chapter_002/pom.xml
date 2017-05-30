@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>tracker</module>
+		<module>paint</module>
 		<module>professions</module>
 	</modules>
 	
