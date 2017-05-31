@@ -15,7 +15,7 @@ public class Triangle implements Shape {
     /**
      * method for building triangle as String instance.
      *
-     * @return triangle as String interface.
+     * @return triangle as String instance.
      */
     @Override
     public String pic() {

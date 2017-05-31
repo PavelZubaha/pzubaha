@@ -15,7 +15,7 @@ public class Square implements Shape {
     /**
      * method for building square as String instance.
      *
-     * @return square as String interface.
+     * @return square as String instance.
      */
     @Override
     public String pic() {
