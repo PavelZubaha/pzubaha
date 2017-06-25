@@ -33,8 +33,7 @@ public class StartUI {
 		trackerMenu.fillActions();
 		do {
 			trackerMenu.show();
-			String key = input.ask("Select: ");
-			trackerMenu.select(key);
+			trackerMenu.select(input.ask("Select: "));
 		} while (!"y".equals(this.input.ask("Exit (y): ")));
 	}
 	/**
