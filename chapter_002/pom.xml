@@ -14,6 +14,7 @@
 		<module>tracker</module>
 		<module>paint</module>
 		<module>professions</module>
+		<module>lesson_6</module>
 	</modules>
 	
 </project>
