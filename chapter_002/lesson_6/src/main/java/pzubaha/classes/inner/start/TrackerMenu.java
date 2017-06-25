@@ -70,12 +70,11 @@ public class TrackerMenu {
 	 */
 	public void select(String stringKey) {
 		for (int i = 0; i < actions.length; i++) {
-			if (this.actions[i] != null && Integer.toString(i).equals(stringKey)) {
+			if (stringKey.equals(Integer.toString(i))) {
 				this.actions[i].execute(this.input, this.tracker);
 				break;
 			}
 		}
-
 	}
 
 	/**
