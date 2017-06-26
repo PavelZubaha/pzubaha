@@ -90,7 +90,7 @@ public class StubInputTest {
 			}
 		);
 
-		//After emulated user actions check that the emulated Item instance is on the [0] position in array returned by getAll() method of tracker.
+		//After emulated user actions check that the edited Item instance is on the [0] position in array returned by getAll() method of tracker.
 		StartUI startUI = new StartUI(tracker, input);
 
 		//act
