@@ -1,2 +1,2 @@
 # pzubaha
-# Lerning Java at Petr Arsentev courses
+# Learning Java at Petr Arsentev courses
