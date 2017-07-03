@@ -27,8 +27,12 @@ public class TrackerMenu {
 	/**
 	 * Array contains different user selections.
 	 */
-	private UserAction[] actions = new UserAction[8];
+	private UserAction[] actions = new UserAction[10];
 
+    /**
+     * Current action position.
+     */
+	private int position = 0;
 	/**
 	 * Constructor.
 	 * @param input - reference to the input instance.
@@ -41,24 +45,36 @@ public class TrackerMenu {
 
 	/**
 	 * For filling user different actions.
-     * @return - an array of valid keys.
 	 */
-	public int[] fillActions() {
-		this.actions[0] = new AddItem();
-		this.actions[1] = new TrackerMenu.ShowAll();
-		this.actions[2] = new EditItem();
-		this.actions[3] = new AddComments();
-		this.actions[4] = new ShowComments();
-		this.actions[5] = new DelItem();
-		this.actions[6] = new TrackerMenu.FindtemById();
-		this.actions[7] = new FindItemByName();
-		int[] result = new int[actions.length];
-		for (int i = 0; i != result.length; i++) {
-		    result[i] = i;
-        }
-		return result;
-	}
+	public void fillActions() {
+		this.actions[position++] = new AddItem();
+        this.actions[position++] = new TrackerMenu.ShowAll();
+        this.actions[position++] = new EditItem();
+        this.actions[position++] = new AddComments();
+        this.actions[position++] = new ShowComments();
+        this.actions[position++] = new DelItem();
+        this.actions[position++] = new TrackerMenu.FindtemById();
+        this.actions[position++] = new FindItemByName();
 
+	}
+    /**
+     * Get action range.
+     * @return - array of integer values of action.
+     */
+	public int[] getActionRange() {
+	    int[] result = new int[this.actions.length];
+	    for (int index = 0; index < actions.length; index++) {
+            result[index] = index;
+        }
+        return result;
+    }
+    /**
+     * Add new action.
+     * @param action - userAction instance.
+     */
+    public void addAction(UserAction action) {
+        this.actions[position++] = action;
+    }
 	/**
 	 * Showing menu.
 	 */
@@ -107,6 +123,7 @@ public class TrackerMenu {
 			String name = input.ask("Please enter the task name: ");
 			String desc = input.ask("Please enter the task description: ");
 			tracker.add(new Task(name, desc));
+			input.ask("Click Enter to continue: ");
 		}
 
 		/**
@@ -150,7 +167,7 @@ public class TrackerMenu {
 			for (Item item : tracker.getAll()) {
 				stringBuilder.append(String.format("%n%d%-4s %-10s %-16s %-12s", index++, ".", item.getName(), item.getDescription(), item.getId()));
 			}
-			System.out.println(stringBuilder);
+            input.ask(String.format("%s%n%s", stringBuilder.toString(), "Click Enter to continue: "));
 		}
 		/**
 		 * String information about menu item.
@@ -200,7 +217,7 @@ public class TrackerMenu {
 		 * @return - info about menu item.
 		 */
 		public String info() {
-			return String.format("%d%-4s%s", this.key(), ".", "Find item by Id");
+			return String.format("%d%-4s%s", this.key(), ".", "Find item by the Id");
 		}
 	}
 }
@@ -327,7 +344,12 @@ class ShowComments implements UserAction {
 		String iD = input.ask("Enter item Id: ");
 		Item foundItem = tracker.findById(iD);
 		if (foundItem != null) {
-			input.ask(foundItem.showItemComments());
+		    String stringComments = foundItem.showItemComments();
+		    if (stringComments.length() > 0) {
+                input.ask(stringComments);
+            } else {
+		        input.ask("This item has no comments.");
+            }
 		} else {
 			input.ask("There is no item with the Id");
 		}
@@ -430,6 +452,6 @@ class FindItemByName implements UserAction {
 	 * @return - info about menu item.
 	 */
 	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Find item by name");
+		return String.format("%d%-4s%s", this.key(), ".", "Find item by the name");
 	}
 }

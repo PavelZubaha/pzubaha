@@ -105,8 +105,7 @@ public class Item {
 	 * @return comments as String instance.
 	 */
 	public String showItemComments() {
-		StringBuilder builder = new StringBuilder();
-		builder.append("");
+		StringBuilder builder = new StringBuilder("");
 		if (currentCommentNumber > 0) {
 			String separator = String.format("%n----------------------------------%n");
 			for (int i = 0; i < currentCommentNumber; i++) {
@@ -126,4 +125,13 @@ public class Item {
 		}
 		return result;
 	}
+    /**
+     * method for deleting comment.
+     * @param commentNumber - number of deleting comment.
+     */
+    public void delComment(int commentNumber) {
+        if (commentNumber  <= currentCommentNumber && commentNumber > 0) {
+            System.arraycopy(this.comments, commentNumber - 1, this.comments, commentNumber - 1, currentCommentNumber--);
+        }
+    }
 }

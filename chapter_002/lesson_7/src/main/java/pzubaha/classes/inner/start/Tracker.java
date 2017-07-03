@@ -126,4 +126,11 @@ public class Tracker {
 		}
 		return result;
 	}
+
+    /**
+     * Exit method.
+     */
+	public void exit() {
+	    System.exit(0);
+    }
 }
