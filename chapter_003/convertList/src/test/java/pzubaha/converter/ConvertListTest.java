@@ -1,0 +1,61 @@
+package pzubaha.converter;
+
+import org.junit.Test;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static org.hamcrest.core.Is.is;
+import static org.junit.Assert.assertArrayEquals;
+import static org.junit.Assert.assertThat;
+
+/**
+ * Chapter_003. Collections. Lite.
+ * Collections Framework.
+ *
+ * Contains solution of task 10035.
+ * Test classes.
+ *
+ * @author Pavel Zubaha (mailto:Apximar@gmail.com)
+ * @since 25.09.17
+ * @version 1
+ */
+public class ConvertListTest {
+    /**
+     * Test converting array to Arraylist.
+     */
+    @Test
+    public void whenArrayConvertToArrayListThenHasOriginalElements() {
+
+        //define array and expected ArrayList
+        int[][] array = {{1, 2}, {3, 4}};
+        List<Integer> expectedList = new ArrayList<>();
+        expectedList.add(1);
+        expectedList.add(2);
+        expectedList.add(3);
+        expectedList.add(4);
+
+        ConvertList convertList = new ConvertList();
+
+        //checking.
+        assertThat(convertList.toList(array), is(expectedList));
+    }
+    /**
+     * Test converting List to two-dimensional array.
+     */
+    @Test
+    public void whenListConvertToArrayThenArrayHasOriginalElementsAndRequiredRowAmount() {
+
+        //define ArrayList and expected array
+        int[][] expectedArray = {{1, 2}, {3, 4}, {5, 6}, {7, 0}};
+        List<Integer> originalList = new ArrayList<>(7);
+        for (int i = 1; i != 8; i++) {
+            originalList.add(i);
+        }
+
+        ConvertList convertList = new ConvertList();
+
+        assertArrayEquals(convertList.toArray(originalList, 4), expectedArray);
+    }
+
+}

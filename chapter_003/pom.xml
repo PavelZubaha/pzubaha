@@ -12,6 +12,7 @@
 
 	<modules>
 		<module>CollectionsPerfomanceMeasurement</module>
+        <module>convertList</module>
 	</modules>
 
 </project>
