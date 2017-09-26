@@ -87,4 +87,19 @@ public class ConvertList {
         }
         return sb.toString();
     }
+
+    /**
+     * Convert List<int[]> to List<Integer>.
+     * @param listOriginal - original List<int[]>
+     * @return - List<Integer> that contain all element of listOriginal.
+     */
+    public List<Integer> convert(List<int[]> listOriginal) {
+        List<Integer> result = new ArrayList<>();
+        for (int[] elementaryArray : listOriginal) {
+            for (int element : elementaryArray) {
+                result.add(element);
+            }
+        }
+        return result;
+    }
 }

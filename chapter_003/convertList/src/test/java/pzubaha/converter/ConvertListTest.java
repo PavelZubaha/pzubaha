@@ -3,6 +3,7 @@ package pzubaha.converter;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import static org.hamcrest.core.Is.is;
@@ -56,6 +57,22 @@ public class ConvertListTest {
         ConvertList convertList = new ConvertList();
 
         assertArrayEquals(convertList.toArray(originalList, 4), expectedArray);
+    }
+    /**
+     * Test converting Lits<int[]> to List<Integer>.
+     */
+    @Test
+    public void whenListOfIntArraysConvertThenResultHasAllOriginalElements() {
+        ConvertList convertList = new ConvertList();
+
+        //define expected and original lists.
+        List<int[]> listOriginal = new ArrayList<>();
+        listOriginal.add(new int[]{1, 2});
+        listOriginal.add(new int[]{3, 4, 5, 6});
+        List<Integer> expected = new ArrayList<>();
+        expected.addAll(Arrays.asList(1, 2, 3, 4, 5, 6));
+
+        assertThat(convertList.convert(listOriginal), is(expected));
     }
 
 }
