@@ -4,6 +4,8 @@ package pzubaha.classes.inner.start;
 import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.templates.BaseAction;
 
+import java.util.List;
+
 /**
  * Chapter 2. OOP.
  * Lesson 7. Exceptions.
@@ -52,10 +54,10 @@ public class StartUI {
                 String iD = input.ask("Enter item Id: ");
                 Item foundItem = tracker.findById(iD);
                 if (foundItem != null) {
-                    String[] comments = foundItem.getComments();
-                    if (comments.length != 0) {
-                        int[] commentsRange = new int[comments.length];
-                        for (int i = 0; i < comments.length; i++) {
+                    List<String> comments = foundItem.getComments();
+                    if (comments.size() != 0) {
+                        int[] commentsRange = new int[comments.size()];
+                        for (int i = 0; i < comments.size(); i++) {
                             commentsRange[i] = i + 1;
                         }
                         int toDeleteCommentNum = input.ask(String.format("%s%n%s", foundItem.showItemComments() + "Enter comment number to delete: "), commentsRange);

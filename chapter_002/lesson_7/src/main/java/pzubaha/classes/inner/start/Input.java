@@ -18,8 +18,8 @@ public interface Input {
 	String ask(String question);
 	/**
 	 * @param question - question promt.
-     * @param range - array of valid values.
-	 * @return inputed by user data.
+     * @param range - list of valid values.
+	 * @return imputed by user data.
 	 */
 	int ask(String question, int[] range);
 }

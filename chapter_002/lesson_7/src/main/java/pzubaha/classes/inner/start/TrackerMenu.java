@@ -4,6 +4,10 @@ package pzubaha.classes.inner.start;
 import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.models.Task;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 /**
  * Chapter 2. OOP.
  * Lesson 7. Exceptions.
@@ -27,12 +31,7 @@ public class TrackerMenu {
 	/**
 	 * Array contains different user selections.
 	 */
-	private UserAction[] actions = new UserAction[10];
-
-    /**
-     * Current action position.
-     */
-	private int position = 0;
+	private List<UserAction> actions = new ArrayList<>();
 	/**
 	 * Constructor.
 	 * @param input - reference to the input instance.
@@ -47,23 +46,24 @@ public class TrackerMenu {
 	 * For filling user different actions.
 	 */
 	public void fillActions() {
-		this.actions[position++] = new AddItem();
-        this.actions[position++] = new TrackerMenu.ShowAll();
-        this.actions[position++] = new EditItem();
-        this.actions[position++] = new AddComments();
-        this.actions[position++] = new ShowComments();
-        this.actions[position++] = new DelItem();
-        this.actions[position++] = new TrackerMenu.FindtemById();
-        this.actions[position++] = new FindItemByName();
-
+		actions.addAll(Arrays.asList(
+		        new AddItem(),
+                new TrackerMenu.ShowAll(),
+                new EditItem(),
+                new AddComments(),
+                new ShowComments(),
+                new DelItem(),
+                new TrackerMenu.FindItemById(),
+                new FindItemByName())
+        );
 	}
     /**
      * Get action range.
      * @return - array of integer values of action.
      */
 	public int[] getActionRange() {
-	    int[] result = new int[this.actions.length];
-	    for (int index = 0; index < actions.length; index++) {
+	    int[] result = new int[this.actions.size()];
+	    for (int index = 0; index < actions.size(); index++) {
             result[index] = index;
         }
         return result;
@@ -73,15 +73,15 @@ public class TrackerMenu {
      * @param action - userAction instance.
      */
     public void addAction(UserAction action) {
-        this.actions[position++] = action;
+        this.actions.add(action);
     }
 	/**
 	 * Showing menu.
 	 */
 	public void show() {
-		for (int i = 0; i < actions.length; i++) {
-			if (actions[i] != null) {
-				System.out.println(actions[i].info());
+		for (int i = 0; i < actions.size(); i++) {
+			if (actions.get(i) != null) {
+				System.out.println(actions.get(i).info());
 			}
 		}
 	}
@@ -91,7 +91,7 @@ public class TrackerMenu {
 	 * @param key - index of action.
 	 */
 	public void select(int key) {
-		this.actions[key].execute(this.input, this.tracker);
+		this.actions.get(key).execute(this.input, this.tracker);
 	}
 
 	/**
@@ -188,7 +188,7 @@ public class TrackerMenu {
 	 * @since 25.06.17
 	 * @version 2
 	 */
-	private static class FindtemById implements UserAction {
+	private static class FindItemById implements UserAction {
 
 		/**
 		 * Special key for each action.
@@ -434,8 +434,8 @@ class FindItemByName implements UserAction {
 	 */
 	public void execute(Input input, Tracker tracker) {
 		String name = input.ask("Enter the item name: ");
-		Item[] foundItem = tracker.findByName(name);
-		if (foundItem.length != 0) {
+		List<Item> foundItem = tracker.findByName(name);
+		if (foundItem.size() != 0) {
 			StringBuilder builder = new StringBuilder();
 			builder.append(String.format("The list of found Items: %n%-5s%-10s%-16s%-12s", "№", "Name", "Description", "Id"));
 			int index = 1;
