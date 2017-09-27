@@ -50,10 +50,14 @@ public class ConvertList {
             result = new int[rows][list.size() / rows];
         }
         Iterator<Integer> iterator = list.iterator();
+        Integer val;
         for (int i = 0; i != result.length; i++) {
             for (int j = 0; j != result[i].length; j++) {
                 if (iterator.hasNext()) {
-                    result[i][j] = iterator.next();
+                    val = iterator.next();
+                    if (val != null) {
+                        result[i][j] = val;
+                    }
                 } else {
                     result[i][j] = 0;
                 }

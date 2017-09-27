@@ -48,11 +48,12 @@ public class ConvertListTest {
     public void whenListConvertToArrayThenArrayHasOriginalElementsAndRequiredRowAmount() {
 
         //define ArrayList and expected array
-        int[][] expectedArray = {{1, 2}, {3, 4}, {5, 6}, {7, 0}};
+        int[][] expectedArray = {{1, 2}, {3, 4}, {0, 6}, {7, 0}};
         List<Integer> originalList = new ArrayList<>(7);
         for (int i = 1; i != 8; i++) {
             originalList.add(i);
         }
+        originalList.set(4, null);
 
         ConvertList convertList = new ConvertList();
 
