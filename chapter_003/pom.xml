@@ -11,9 +11,10 @@
 	</parent>
 
 	<modules>
-		<module>CollectionsPerfromanceMeasurement</module>
+        <module>CollectionsPerfromanceMeasurement</module>
         <module>convertList</module>
         <module>userconvert</module>
+        <module>comparable</module>
 	</modules>
 
 </project>
