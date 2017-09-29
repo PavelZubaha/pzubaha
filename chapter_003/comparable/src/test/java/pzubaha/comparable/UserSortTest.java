@@ -23,7 +23,7 @@ import java.util.List;
 public class UserSortTest {
 
     /**
-     * Test for sort method.
+     * Test for sort() method.
      */
     @Test
     public void whenUseSortUserListThenReturnedSortedSetOfOriginalUsers() {
@@ -47,5 +47,57 @@ public class UserSortTest {
 
         //check result of pzubaha.comparable.User.sort(list)
         assertThat(us.sort(list).toString(), is(expected));
+    }
+
+    /**
+     * Test sortByAllFields method.
+     */
+    @Test
+    public void whenUseSortByAllFieldsThenReturnedSortedByNameAndAgeList() {
+        //Create tested instance
+        UserSort us = new UserSort();
+
+        //assign original List of User's
+        User user1 = new User("Ann", 35);
+        User user2 = new User("Bob", 30);
+        User user3 = new User("Cris", 33);
+        User user4 = new User("Bob", 40);
+        User user5 = new User("Bob", 25);
+        User user6 = new User("Cris", 28);
+
+        List<User> list = new ArrayList<>();
+        list.addAll(Arrays.asList(user1, user2, user3, user4, user5, user6));
+
+        //assign expected String
+        String expected = String.format("[%s, %s, %s, %s, %s, %s]", user1, user5, user2, user4, user6, user3);
+
+        //check result
+        assertThat(us.sortByAllFields(list).toString(), is(expected));
+    }
+
+    /**
+     *
+     */
+    @Test
+    public void whenUseSortByNameLengthThenReturnedSorted() {
+        //Create tested instance
+        UserSort us = new UserSort();
+
+        //assign original List of User's
+        User user1 = new User("Cristian", 35);
+        User user2 = new User("Antony", 30);
+        User user3 = new User("Cris", 33);
+        User user4 = new User("Pavel", 40);
+        User user5 = new User("Bob", 25);
+        User user6 = new User("Li", 28);
+
+        List<User> list = new ArrayList<>();
+        list.addAll(Arrays.asList(user1, user2, user3, user4, user5, user6));
+
+        //assign expected String
+        String expected = String.format("[%s, %s, %s, %s, %s, %s]", user6, user5, user3, user4, user2, user1);
+
+        //check result
+        assertThat(us.sortNameLength(list).toString(), is(expected));
     }
 }
