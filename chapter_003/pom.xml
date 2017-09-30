@@ -11,7 +11,7 @@
 	</parent>
 
 	<modules>
-        <module>CollectionsPerfromanceMeasurement</module>
+        <module>CollectionsPerformanceMeasurement</module>
         <module>convertList</module>
         <module>userconvert</module>
         <module>comparable</module>
