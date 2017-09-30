@@ -40,7 +40,16 @@ public class User implements Comparable {
      */
     @Override
     public int compareTo(Object o) {
-        return this.age - ((User) o).getAge();
+        int result;
+        if (this == o) {
+            result = 0;
+        } else {
+            result = this.age - ((User) o).getAge();
+            if (result == 0) {
+                result = this.name.compareTo(((User) o).getName());
+            }
+        }
+        return result;
     }
 
     /**

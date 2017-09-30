@@ -76,7 +76,7 @@ public class UserSortTest {
     }
 
     /**
-     *
+     * Test sortByNameLength method.
      */
     @Test
     public void whenUseSortByNameLengthThenReturnedSorted() {
@@ -99,5 +99,29 @@ public class UserSortTest {
 
         //check result
         assertThat(us.sortNameLength(list).toString(), is(expected));
+    }
+
+    /**
+     * Test sort method.
+     * Case when users has same age.
+     */
+    @Test
+    public void whenSortUserListIfOriginalUsersHasSameAge() {
+        //Create tested instance
+        UserSort us = new UserSort();
+
+        //assign original List of User's
+        User user1 = new User("Ann", 30);
+        User user2 = new User("Bob", 30);
+        User user3 = new User("Cris", 30);
+
+        List<User> list = new ArrayList<>();
+        list.addAll(Arrays.asList(user3, user2, user1));
+
+        //assign expected String
+        String expected = String.format("[%s, %s, %s]", user1, user2, user3);
+
+        //check result of pzubaha.comparable.User.sort(list)
+        assertThat(us.sort(list).toString(), is(expected));
     }
 }
