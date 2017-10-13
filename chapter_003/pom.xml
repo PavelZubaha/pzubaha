@@ -15,6 +15,7 @@
         <module>convertList</module>
         <module>userconvert</module>
         <module>comparable</module>
+        <module>BankCollection</module>
 	</modules>
 
 </project>
