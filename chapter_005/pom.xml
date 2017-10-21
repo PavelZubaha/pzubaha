@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project>
+
+    <modelVersion>4.0.0</modelVersion>
+    <packaging>pom</packaging>
+    <artifactId>chapter_005</artifactId>
+    <version>1.0-SNAPSHOT</version>
+    <parent>
+        <artifactId>pzubaha</artifactId>
+        <groupId>ru.job4j</groupId>
+        <version>2.0</version>
+    </parent>
+
+    <modules>
+        <module>1.Iterator</module>
+    </modules>
+
+</project>
