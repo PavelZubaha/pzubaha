@@ -2,7 +2,7 @@
  * Chapter_005. Collection. Pro.
  * Iterator.
  * <p>
- * Contains solution of task 9539, 150, 151.
+ * Contains solution of task 9539, 150, 151, 152.
  * Test package.
  * Created 17.10.2017.
  *

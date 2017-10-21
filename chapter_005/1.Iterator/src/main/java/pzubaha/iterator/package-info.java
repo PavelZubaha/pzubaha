@@ -2,7 +2,7 @@
  * Chapter_005. Collection. Pro.
  * Iterator.
  * <p>
- * Package contains solution of task 9539, 150, 151.
+ * Package contains solution of task 9539, 150, 151, 152.
  * Iterator for two dementia's array.
  * Created 17.10.2017.
  *
