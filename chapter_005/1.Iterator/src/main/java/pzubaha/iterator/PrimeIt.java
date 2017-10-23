@@ -32,7 +32,6 @@ public class PrimeIt implements Iterator<Integer> {
      */
     public PrimeIt(int[] values) {
         this.values = values;
-        setNextPosition();
     }
 
     /**
@@ -41,6 +40,7 @@ public class PrimeIt implements Iterator<Integer> {
      */
     @Override
     public boolean hasNext() {
+        setNextPosition();
         return position != values.length;
     }
 
@@ -55,7 +55,6 @@ public class PrimeIt implements Iterator<Integer> {
         if (hasNext()) {
             result = values[position];
             position++;
-            this.setNextPosition();
         } else {
             throw new NoSuchElementException();
         }
@@ -66,10 +65,11 @@ public class PrimeIt implements Iterator<Integer> {
      * Set next position of prime elements or set position = values.length.
      */
     private void setNextPosition() {
-        for (; position != values.length; position++) {
+        while (position != values.length) {
            if (isPrime(values[position])) {
                break;
            }
+           position++;
         }
     }
 
@@ -79,11 +79,10 @@ public class PrimeIt implements Iterator<Integer> {
      * @return true if value is prime, otherwise false.
      */
     private boolean isPrime(int value) {
-        boolean result = true;
-        if (value < 2) {
-            result = false;
-        } else {
-            for (int i = 2; i < value; i++) {
+        final int CHECK_TO = ((int) Math.sqrt(value));
+        boolean result = value > 1 && (value % 2 != 0 || value == 2);
+        if (result) {
+            for (int i = 3; i <= CHECK_TO; i += 2) {
                 if (value % i == 0) {
                     result = false;
                     break;
