@@ -31,7 +31,6 @@ public class EvenIt implements Iterator {
      */
     public EvenIt(int[] numbers) {
         this.numbers = numbers;
-        setNextEvenPointer();
     }
 
     /**
@@ -40,13 +39,14 @@ public class EvenIt implements Iterator {
      */
     @Override
     public boolean hasNext() {
+        setNextEvenPointer();
         return position < numbers.length;
     }
 
     /**
      * getting next even element.
      * @return value of next even element if it does exist.
-     * otherwise trow NoSuchElementException
+     * otherwise throws NoSuchElementException
      */
     @Override
     public Integer next() {
@@ -54,7 +54,6 @@ public class EvenIt implements Iterator {
         if (hasNext()) {
             result = numbers[position];
             position++;
-            setNextEvenPointer();
         } else {
             throw new NoSuchElementException();
         }
@@ -65,10 +64,11 @@ public class EvenIt implements Iterator {
      * setting next even pointer.
      */
     private void setNextEvenPointer() {
-        for (; position < numbers.length; position++) {
+        while (position != numbers.length) {
             if (numbers[position] % 2 == 0) {
                 break;
             }
+            position++;
         }
     }
 }
