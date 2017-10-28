@@ -84,4 +84,12 @@ public class SimpleArray<T> {
         }
         return result;
     }
+
+    /**
+     * get length of element sequence.
+     * @return length.
+     */
+    public int length() {
+        return position;
+    }
 }
