@@ -60,28 +60,24 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
             throw new IndexOutOfBoundsException();
         }
         if (e != null) {
+            //add after last element or add to empty container
             if (position == size) {
                 this.add(e);
             } else {
                 Node<E> node = new Node<>(e);
-                boolean flag = false;
                 if (position == 0) {
+                    //add first
                     node.linkNext(first);
                     first = node;
-                    flag = true;
-                }
-                if (position == size - 1) {
+                } else if (position == size - 1) {
+                    //add last.
                     node.linkPrevious(last.previous);
                     node.linkNext(last);
-                    flag = true;
-                }
-                if (!flag && size > 2) {
-                    Node<E> previousOfSpecified = first;
-                    for (int i = 1; i < position; i++) {
-                        previousOfSpecified = previousOfSpecified.next;
-                    }
-                    node.linkNext(previousOfSpecified.next);
-                    node.linkPrevious(previousOfSpecified);
+                } else {
+                    //add to the middle of sequence
+                    Node<E> prevOfSpec = findNode(position - 1);
+                    node.linkNext(prevOfSpec.next);
+                    node.linkPrevious(prevOfSpec);
                 }
                 size++;
             }
@@ -107,6 +103,14 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
     @Override
     public final Iterator<E> iterator() {
         return new It();
+    }
+
+    /**
+     * Try is container empty.
+     * @return condition true if empty.
+     */
+    public boolean isEmpty() {
+        return size == 0;
     }
 
     /**
