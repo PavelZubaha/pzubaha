@@ -148,7 +148,7 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
     }
 
     /**
-     * Method for checking has this set more elements ?
+     * Method for checking has this set more elements.
      * @return true if there are present more elements, otherwise false.
      */
     @Override
