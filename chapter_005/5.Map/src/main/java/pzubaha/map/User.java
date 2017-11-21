@@ -38,6 +38,4 @@ public class User {
         this.children = children;
         this.birthday = birthday;
     }
-
-
 }
