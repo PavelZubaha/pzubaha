@@ -21,7 +21,7 @@ import static org.hamcrest.core.Is.is;
  */
 public class ArraySetTest {
     /**
-     * Tested SimpleArraySet reference.
+     * Tested ArraySet reference.
      */
     private ArraySet<Integer> as;
     /**

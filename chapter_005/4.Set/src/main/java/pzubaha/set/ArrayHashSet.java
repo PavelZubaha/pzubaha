@@ -7,14 +7,14 @@ import java.util.NoSuchElementException;
  * 4.Set.
  * Task 996.
  * Class represents a simple set structure,
- * based on sorted array of objects.
+ * based on sorted by hash codes array of objects.
  * Created 16.11.2017.
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
  *
  * @param <E> - parametrized type.
  */
-public class SimpleArraySet<E> implements SimpleSet<E> {
+public class ArrayHashSet<E> implements SimpleSet<E> {
     /**
      * Amount of added elements.
      */
@@ -30,20 +30,20 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
     /**
      * Default capacity.
      */
-    private static final int DEF_CAP = 64;
+    private static final int DEF_CAP = 16;
 
     /**
      * Constructor.
      * @param capacity initial capacity.
      */
-    public SimpleArraySet(final int capacity) {
+    public ArrayHashSet(final int capacity) {
         this.data = new Object[capacity > DEF_CAP ? capacity : DEF_CAP];
     }
 
     /**
      * Default constructor.
      */
-    public SimpleArraySet() {
+    public ArrayHashSet() {
         this.data = new Object[DEF_CAP];
     }
 
@@ -167,5 +167,32 @@ public class SimpleArraySet<E> implements SimpleSet<E> {
             throw new NoSuchElementException();
         }
         return (E) data[pointer++];
+    }
+
+    /**
+     * For reset pointer to first stored value.
+     */
+    public void resetPointer() {
+        pointer = 0;
+    }
+
+    /**
+     * Method for removing elements.
+     * @param e value that needs to be removed.
+     * @return true if element had returned, otherwise false.
+     */
+    public boolean remove(E e) {
+        boolean result = false;
+        if (e != null) {
+            int index = findIndByHash(0, amount - 1, e.hashCode());
+            if (index != -1 && index != amount) {
+                result = data[index].equals(e);
+                if (result) {
+                    System.arraycopy(data, index + 1, data, index, amount - index - 1);
+                    data[--amount] = null;
+                }
+            }
+        }
+        return result;
     }
 }
