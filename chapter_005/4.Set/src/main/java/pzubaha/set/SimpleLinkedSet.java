@@ -7,8 +7,8 @@ import java.util.NoSuchElementException;
  * 4.Set
  * Task 997.
  * <p>
- * Class represents simple set data structure
- * based on linked list.
+ * Class represents set data structure,
+ * based on simple linked list.
  * Created 18.11.2017.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
@@ -27,10 +27,6 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
      * First element.
      */
     private Node<E> first;
-    /**
-     * Last element.
-     */
-    private Node<E> last;
 
     /**
      * Class for wrap and store elements.
@@ -42,7 +38,6 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
         }
         private E val;
         private Node<E> next;
-        private Node<E> prev;
     }
 
     /**
@@ -54,48 +49,29 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
     public final boolean add(E e) {
         boolean result = true;
         if (e != null) {
-            Node<E> addNode = new Node<E>(e);
+            Node<E> addNode = new Node<>(e);
             Node<E> pointer = first;
-            //when there are elements present in the set.
             if (pointer != null) {
-                int hash = e.hashCode();
-                //before first
-                if (hash < first.val.hashCode()) {
-                    first.prev = addNode;
-                    addNode.next = first;
-                    first = addNode;
-                    //after last
-                } else if (hash > last.val.hashCode()) {
-                    last.next = addNode;
-                    addNode.prev = last;
-                    last = addNode;
-                    //add before the pointer position
-                } else {
-                    while (hash > pointer.val.hashCode()) {
-                        pointer = pointer.next;
+                if (first.val.equals(e)) {
+                    result = false;
+                }
+                while (pointer.next != null) {
+                    if (pointer.val.equals(e)) {
+                        result = false;
+                        break;
                     }
-                    if (hash == pointer.val.hashCode()) {
-                        result = !e.equals(pointer.val);
-                    }
-                    if (result) {
-                        addNode.prev = pointer.prev;
-                        addNode.next = pointer;
-                        pointer.prev = addNode;
-                        if (addNode.prev == null) {
-                            first = addNode;
-                        } else {
-                            addNode.prev.next = addNode;
-                        }
-                    }
+                    pointer = pointer.next;
+                }
+                if (result) {
+                    pointer.next = addNode;
+                    length++;
                 }
             } else {
-                //when there are no elements present in the set
                 first = addNode;
-                last = addNode;
+                length++;
             }
-        }
-        if (result) {
-            length++;
+        } else {
+            result = false;
         }
         return result;
     }

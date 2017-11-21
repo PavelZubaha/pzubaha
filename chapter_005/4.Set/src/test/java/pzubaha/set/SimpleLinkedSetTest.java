@@ -33,7 +33,7 @@ public class SimpleLinkedSetTest {
     }
 
     /**
-     * Test add methods
+     * Test add, next methods
      */
     @Test(expected = NoSuchElementException.class)
     public void whenAddNewElementThenItWillBePresentInTheSetAndTrueReturned() {
@@ -42,18 +42,12 @@ public class SimpleLinkedSetTest {
         assertTrue(simpSet.add("0"));
         assertTrue(simpSet.add("3"));
         assertTrue(simpSet.add("2"));
-        assertThat(simpSet.next(), is("0"));
         assertThat(simpSet.next(), is("1"));
-        assertThat(simpSet.next(), is("2"));
+        assertThat(simpSet.next(), is("0"));
         assertThat(simpSet.next(), is("3"));
+        assertThat(simpSet.next(), is("2"));
+        assertTrue(!simpSet.hasNext());
         simpSet.next();
     }
 
-    @Test
-    public void hasNext() {
-    }
-
-    @Test
-    public void next() {
-    }
 }
