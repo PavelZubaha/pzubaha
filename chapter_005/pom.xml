@@ -16,6 +16,7 @@
         <module>2.Generic</module>
         <module>3.List</module>
         <module>4.Set</module>
+        <module>5.Map</module>
     </modules>
 
 </project>
