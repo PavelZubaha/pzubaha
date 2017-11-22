@@ -20,14 +20,17 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
      */
     private int length = 0;
     /**
-     * Cursor for next, has next method.
-     */
-    private int cursor = 0;
-    /**
      * First element.
      */
     private Node<E> first;
-
+    /**
+     * Last element.
+     */
+    private Node<E> last;
+    /**
+     * Cursor for next, has next method.
+     */
+    private Node<E> cursor = first;
     /**
      * Class for wrap and store elements.
      * @param <E> parametrized type.
@@ -39,52 +42,58 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
         private E val;
         private Node<E> next;
     }
-
     /**
-     * Method for add elements.
-     * @param e element that needs add.
-     * @return true if element has added, otherwise false.
+     * Adds e value to the end of singly-linked list.
+     * @param e - value to add
+     * @return - true - value has been added, false - otherwise.
      */
     @Override
     public final boolean add(E e) {
-        boolean result = true;
-        if (e != null) {
-            Node<E> addNode = new Node<>(e);
-            Node<E> pointer = first;
-            if (pointer != null) {
-                if (first.val.equals(e)) {
-                    result = false;
-                }
-                while (pointer.next != null) {
-                    if (pointer.val.equals(e)) {
-                        result = false;
-                        break;
-                    }
-                    pointer = pointer.next;
-                }
-                if (result) {
-                    pointer.next = addNode;
-                    length++;
-                }
-            } else {
-                first = addNode;
-                length++;
-            }
-        } else {
-            result = false;
+        if (e == null) {
+            return false;
+        }
+        boolean result = false;
+        Node<E> addNode = new Node<>(e);
+        if (first == null) {
+            first = addNode;
+            cursor = first;
+            result = true;
+            length++;
+            last = addNode;
+        } else if (!contains(e)) {
+            last.next = addNode;
+            last = addNode;
+            result = true;
+            length++;
         }
         return result;
     }
-
+    /**
+     * Does linked list contains particular e value, or not.
+     * @param e - value to search.
+     * @return - true - contains, false - otherwise.
+     */
+    private boolean contains(E e) {
+        boolean result = false;
+        Node<E> pointer = first;
+        while (pointer != null) {
+            result = pointer.val.equals(e);
+            if (result) {
+                result = true;
+                break;
+            }
+            pointer = pointer.next;
+        }
+        return result;
+    }
     /**
      * Method for checking has this set more elements.
      * @return true if there are present more elements, otherwise false.
      */
     @Override
     public final boolean hasNext() {
-        return cursor < length;
+        return cursor != null;
     }
-
     /**
      * Method returns next element of the set.
      * @return next element
@@ -95,22 +104,16 @@ public class SimpleLinkedSet<E> implements SimpleSet<E> {
         if (!hasNext()) {
             throw new NoSuchElementException();
         }
-        Node<E> node = first;
-        for (int i = 0; i < cursor; i++) {
-            node = node.next;
-        }
-        E result = node.val;
-        cursor++;
+        E result = cursor.val;
+        cursor = cursor.next;
         return result;
     }
-
     /**
      * Method reset current cursor for next/hasNext methods.
      */
     public void resetNext() {
-        cursor = 0;
+        cursor = first;
     }
-
     /**
      * Ger length of this set.
      * @return length.
