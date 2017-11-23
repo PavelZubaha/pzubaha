@@ -4,16 +4,18 @@ import java.util.Calendar;
 
 /**
  * Chapter_005. Collection. Pro.
- * 5.Map
+ * 5.Map.
  * <p>
  * Contains solution of task 999.
  * Class represents the model of the User.
+ * With  overridden not hash code, nor equals.
  * Created 21.11.2017.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
  */
 public class User {
+
     /**
      * User name.
      */
@@ -25,7 +27,7 @@ public class User {
     /**
      * Birthday of user.
      */
-    private Calendar birthday;
+    public Calendar birthday;
 
     /**
      * Constructor.
@@ -37,5 +39,29 @@ public class User {
         this.name = name;
         this.children = children;
         this.birthday = birthday;
+    }
+
+    /**
+     * Get name.
+     * @return name.
+     */
+    public String getName() {
+        return name;
+    }
+
+    /**
+     * Get children.
+     * @return amount of children.
+     */
+    public int getChildren() {
+        return children;
+    }
+
+    /**
+     * Get birthday.
+     * @return calendar birthday.
+     */
+    public Calendar getBirthday() {
+        return birthday;
     }
 }
