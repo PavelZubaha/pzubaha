@@ -32,7 +32,7 @@ public class UserHashCodeOverridden extends User {
     public int hashCode() {
         int hash = 31 + getName().hashCode();
         hash = hash * 31 + getChildren();
-        hash = hash * 31 + (int) (birthday.getTimeInMillis() >> 32);
+        hash = hash * 31 + (int) (getBirthday().getTimeInMillis() >> 32);
         return hash;
     }
 }

@@ -27,7 +27,7 @@ public class User {
     /**
      * Birthday of user.
      */
-    public Calendar birthday;
+    private Calendar birthday;
 
     /**
      * Constructor.

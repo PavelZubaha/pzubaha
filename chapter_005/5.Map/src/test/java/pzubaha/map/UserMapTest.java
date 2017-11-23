@@ -12,7 +12,7 @@ import java.util.Map;
  * Chapter_005. Collection. Pro.
  * 5.Map
  * <p>
- * Contains solution of task 1005, 1003.
+ * Contains solution of task 1005, 1003, 1004.
  * Class test for representing results of putting on HashMap
  * different User classes.
  * Created 21.11.2017.
@@ -41,13 +41,25 @@ public class UserMapTest {
         System.out.println(map);
     }
     /**
-     * Test behavior with overridden equals, hashCode methods.
+     * Test behavior with overridden hashCode method.
      */
     @Test
     public void whenAddUserWithOverriddenHashCodeAndEqualsNotOverride() {
         String name = String.valueOf("User");
         UserHashCodeOverridden user1 = new UserHashCodeOverridden(name, 1, birthday);
         UserHashCodeOverridden user2 = new UserHashCodeOverridden(name, 1, birthday);
+        map.put(user1, 1);
+        map.put(user2, 2);
+        System.out.println(map);
+    }
+    /**
+     * Test behavior with overridden equals method.
+     */
+    @Test
+    public void whenAddUserWithOverriddenEqualsAndHashCodeNotOverride() {
+        String name = String.valueOf("User");
+        UserEqualsOverridden user1 = new UserEqualsOverridden(name, 1, birthday);
+        UserEqualsOverridden user2 = new UserEqualsOverridden(name, 1, birthday);
         map.put(user1, 1);
         map.put(user2, 2);
         System.out.println(map);
