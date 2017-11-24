@@ -45,7 +45,6 @@ public class UserMapTest {
      */
     @Test
     public void whenAddUserWithOverriddenHashCodeAndEqualsNotOverride() {
-        String name = String.valueOf("User");
         UserHashCodeOverridden user1 = new UserHashCodeOverridden(name, 1, birthday);
         UserHashCodeOverridden user2 = new UserHashCodeOverridden(name, 1, birthday);
         map.put(user1, 1);
@@ -57,11 +56,23 @@ public class UserMapTest {
      */
     @Test
     public void whenAddUserWithOverriddenEqualsAndHashCodeNotOverride() {
-        String name = String.valueOf("User");
         UserEqualsOverridden user1 = new UserEqualsOverridden(name, 1, birthday);
         UserEqualsOverridden user2 = new UserEqualsOverridden(name, 1, birthday);
         map.put(user1, 1);
         map.put(user2, 2);
         System.out.println(map);
     }
+
+    /**
+     * Test behavior with overridden equals and hashCode methods.
+     */
+    @Test
+    public void whenAddUserHashCodeEqualsOverride() {
+        UserHashCodeEqualsOverridden us1 = new UserHashCodeEqualsOverridden(name, 1, birthday);
+        UserHashCodeEqualsOverridden us2 = new UserHashCodeEqualsOverridden(name, 1, birthday);
+        map.put(us1, 1);
+        map.put(us2, 2);
+        System.out.println(map);
+    }
+
 }
