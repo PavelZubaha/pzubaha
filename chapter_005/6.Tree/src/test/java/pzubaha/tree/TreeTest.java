@@ -10,7 +10,7 @@ import static org.junit.Assert.assertThat;
  * Chapter_005. Collection. Pro.
  * 6.Tree. Elementary tree.
  * <p>
- * Contains solution of task 1711.
+ * Contains solution of task 1712.
  * Class represents tests for Tree class.
  * Created 26.12.2017.
  *
@@ -54,5 +54,18 @@ public class TreeTest {
                 tree.findBy(7).isPresent(),
                 is(false)
         );
+    }
+    /**
+     * Test isBinary method.
+     */
+    @Test
+    public void whenAddMoreTwoChildToParentThanTreeBecomeNotBinary() {
+        assertThat(tree.isBinary(), is(true));
+        tree.add(1, 2);
+        assertThat(tree.isBinary(), is(true));
+        tree.add(1, 3);
+        assertThat(tree.isBinary(), is(true));
+        tree.add(1,4);
+        assertThat(tree.isBinary(), is(false));
     }
 }

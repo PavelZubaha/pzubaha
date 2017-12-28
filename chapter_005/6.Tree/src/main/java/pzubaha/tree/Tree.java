@@ -1,12 +1,17 @@
 package pzubaha.tree;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Optional;
+import java.util.Queue;
 
 /**
  * Chapter_005. Collection. Pro.
  * 6.Tree. Elementary tree.
  * <p>
- * Contains solution of task 1711.
+ * Contains solution of task 1712.
  * Class represents the simple tree structure.
  * Created 26.12.2017.
  *
@@ -83,6 +88,24 @@ public class Tree<T extends Comparable<T>> implements SimpleTree<T> {
             values.add(node.getValue());
         }
         return values.iterator();
+    }
+    /**
+     * Checking is this tree is binary.
+     * @return true if the tree is  binary(each node has <= 2 child), false otherwise.
+     */
+    public boolean isBinary() {
+        boolean result = true;
+        if (root != null) {
+            List<Node<T>> nodes = new ArrayList<>();
+            root.addAllToList(nodes);
+            for (Node<T> node : nodes) {
+                if (node.leaves().size() > 2) {
+                    result = false;
+                    break;
+                }
+            }
+        }
+        return result;
     }
 }
 

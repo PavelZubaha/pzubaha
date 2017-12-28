@@ -4,8 +4,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Special class for store date in Tree.
- * @param <T> parametrized ype
+ * Chapter_005. Collection. Pro.
+ * 6.Tree. Elementary tree.
+ * <p>
+ * Contains solution of task 1712.
+ * Class represents the simple tree structure.
+ * Created 26.12.2017.
+ *
+ * @author Pavel Zubaha (mailto:Apximar@gmail.com)
+ * @version 1
+ * <T> - parametrized type implementing Comparable.
  */
 class Node<T> {
     private final List<Node<T>> children = new ArrayList<>();
