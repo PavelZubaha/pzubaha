@@ -1,11 +1,6 @@
 package pzubaha.tree;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Optional;
-import java.util.Queue;
+import java.util.*;
 
 /**
  * Chapter_005. Collection. Pro.
@@ -76,36 +71,41 @@ public class Tree<T extends Comparable<T>> implements SimpleTree<T> {
 
     /**
      * Iterator for this tree.
-     *
      * @return iterator.
      */
     @Override
     public Iterator<T> iterator() {
-        List<Node<T>> nodes = new ArrayList<>();
-        root.addAllToList(nodes);
-        List<T> values = new ArrayList<>(nodes.size());
-        for (Node<T> node : nodes) {
-            values.add(node.getValue());
+        class TreeIterator implements Iterator<T> {
+            private Queue<Node<T>> data;
+            private Node<T> el;
+            private TreeIterator() {
+                data = new LinkedList<>();
+                data.offer(root);
+            }
+            @Override
+            public boolean hasNext() {
+                return !data.isEmpty();
+            }
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException("There is no more elements");
+                }
+                el = data.poll();
+                for (Node<T> child : el.leaves()) {
+                    data.offer(child);
+                }
+                return el.getValue();
+            }
         }
-        return values.iterator();
+        return new TreeIterator();
     }
     /**
      * Checking is this tree is binary.
      * @return true if the tree is  binary(each node has <= 2 child), false otherwise.
      */
     public boolean isBinary() {
-        boolean result = true;
-        if (root != null) {
-            List<Node<T>> nodes = new ArrayList<>();
-            root.addAllToList(nodes);
-            for (Node<T> node : nodes) {
-                if (node.leaves().size() > 2) {
-                    result = false;
-                    break;
-                }
-            }
-        }
-        return result;
+        return root.isBinary();
     }
 }
 

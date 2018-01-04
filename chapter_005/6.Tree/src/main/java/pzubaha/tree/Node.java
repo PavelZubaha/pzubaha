@@ -61,4 +61,20 @@ class Node<T> {
     public boolean eqValue(T that) {
         return this.value.equals(that);
     }
+
+    /**
+     * Checking is this tree is binary.
+     * @return true if the tree is  binary(each node has <= 2 child), false otherwise.
+     */
+    public boolean isBinary() {
+        boolean result = true;
+        if (leaves().size() > 2) {
+            result = false;
+        } else {
+            for (Node node : leaves()) {
+                node.isBinary();
+            }
+        }
+        return result;
+    }
 }
