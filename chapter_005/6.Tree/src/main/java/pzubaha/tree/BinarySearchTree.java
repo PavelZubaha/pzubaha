@@ -1,6 +1,9 @@
 package pzubaha.tree;
 
+import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.NoSuchElementException;
+import java.util.Queue;
 
 /**
  * Chapter_005. Collection. Pro.
@@ -9,13 +12,13 @@ import java.util.NoSuchElementException;
  * Contains solution of task 1714.
  * Class represents simple BST.
  * This class can store not nullable objects.
- * Created 26.12.2017.
+ * Created 05.01.2018.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
  * <T> - parametrized type implementing Comparable.
  */
-public class BinarySearchTree<T extends Comparable<T>> {
+public class BinarySearchTree<T extends Comparable<T>> implements Iterable<T> {
     private final T value;
     private BinarySearchTree<T> left;
     private BinarySearchTree<T> rigth;
@@ -25,6 +28,14 @@ public class BinarySearchTree<T extends Comparable<T>> {
             throw new NoSuchElementException("Nullable elements is not allowed");
         }
         this.value = value;
+    }
+
+    /**
+     * Simple getter for value.
+     * @return value.
+     */
+    public T getValue() {
+        return value;
     }
 
     /**
@@ -80,7 +91,40 @@ public class BinarySearchTree<T extends Comparable<T>> {
             // if left == null ==> result = this
         }
         //if compare == 0 ==> result = this.
-
         return result;
+    }
+
+    /**
+     * Get iterator for this tree.
+     * The iterator iterate elements by breadth-first order.
+     * @return iterator of this BST.
+     */
+    public Iterator<T> iterator() {
+        class BSTIterator implements Iterator<T> {
+            private Queue<BinarySearchTree<T>> nextData = new LinkedList<>();
+            private BSTIterator() {
+                nextData.offer(BinarySearchTree.this);
+            }
+            @Override
+            public boolean hasNext() {
+                return !nextData.isEmpty();
+            }
+
+            @Override
+            public T next() {
+                if (!hasNext()) {
+                    throw new NoSuchElementException();
+                }
+                BinarySearchTree<T> result = nextData.poll();
+                if (result.left != null) {
+                    nextData.offer(result.left);
+                }
+                if (result.rigth != null) {
+                    nextData.offer(result.rigth);
+                }
+                return result.value;
+            }
+        }
+        return new BSTIterator();
     }
 }

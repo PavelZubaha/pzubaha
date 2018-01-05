@@ -2,6 +2,9 @@ package pzubaha.tree;
 
 import org.junit.Test;
 
+import java.util.Iterator;
+import java.util.NoSuchElementException;
+
 import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.assertThat;
 
@@ -12,7 +15,7 @@ import static org.junit.Assert.assertThat;
  * Contains solution of task 1714.
  * Class represents tests for simple binary search tree.
  * This class can store not nullable objects.
- * Created 26.12.2017.
+ * Created 05.01.2018.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
@@ -32,5 +35,21 @@ public class BinarySearchTreeTest {
         assertThat(bst.contains(15), is(false));
         assertThat(bst.add(15), is(true));
         assertThat(bst.contains(15), is(true));
+    }
+    @Test(expected = NoSuchElementException.class)
+    public void whenCallNextInIteratorObjThanItReturnsNextElementIfHasNext() {
+        BinarySearchTree<Integer> bst = new BinarySearchTree<>(10);
+        bst.add(5);
+        bst.add(15);
+        bst.add(9);
+        bst.add(8);
+        Iterator<Integer> it = bst.iterator();
+        assertThat(it.hasNext(), is(true));
+        assertThat(it.next(), is(10));
+        assertThat(it.next(), is(5));
+        assertThat(it.next(), is(15));
+        assertThat(it.next(), is(9));
+        assertThat(it.next(), is(8));
+        it.next();
     }
 }
