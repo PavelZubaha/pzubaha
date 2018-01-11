@@ -72,7 +72,10 @@ class Node<T> {
             result = false;
         } else {
             for (Node node : leaves()) {
-                node.isBinary();
+                if (!node.isBinary()) {
+                    result = false;
+                    break;
+                }
             }
         }
         return result;
