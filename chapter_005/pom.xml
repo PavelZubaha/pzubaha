@@ -18,6 +18,7 @@
         <module>4.Set</module>
         <module>5.Map</module>
         <module>6.Tree</module>
+        <module>7.CollectionTestTask</module>
     </modules>
 
 </project>
