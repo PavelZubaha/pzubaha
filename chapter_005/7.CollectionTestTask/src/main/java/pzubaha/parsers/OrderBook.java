@@ -3,6 +3,7 @@ package pzubaha.parsers;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedHashMap;
 import java.util.Map;
 import java.util.TreeMap;
 
@@ -25,7 +26,7 @@ import java.util.TreeMap;
 public class OrderBook {
     private final String id;
     private HashMap<Integer, Order> unsorted = new HashMap<>(32768, 3f);
-    private BidAskMap bid = new BidAskMap((o1, o2) -> -1 * Float.compare(o1, o2));
+    private BidAskMap bid = new BidAskMap((o1, o2) -> (-1 * Float.compare(o1, o2)));
     private BidAskMap ask = new BidAskMap(Float::compare);
 
     /**
@@ -52,7 +53,7 @@ public class OrderBook {
         bidAsk = operation == OPERATION.BUY ? bid : ask;
         if (!bidAsk.containsKey(price)) {
             vol = bidAsk == bid ? ask.checkIncomingOppositeOrder(price, vol) : bid.checkIncomingOppositeOrder(price, vol);
-            map = new SinglePriceMap(256, 3f);
+            map = new SinglePriceMap(64, 2f);
         } else {
             map = bidAsk.get(price);
         }
@@ -93,11 +94,11 @@ public class OrderBook {
     /**
      * Class represents hash map of same price orders mapping by id's.
      */
-    private class SinglePriceMap extends HashMap<Integer, Order> {
+    private class SinglePriceMap extends LinkedHashMap<Integer, Order> {
         int sum = 0;
 
         SinglePriceMap(int initCap, float loadFactor) {
-            super(initCap, loadFactor);
+            super(initCap, loadFactor, false);
         }
 
         @Override
@@ -138,7 +139,7 @@ public class OrderBook {
      */
     public StringBuilder print() {
         StringBuilder result = new StringBuilder(512);
-        result.append(String.format("Order Book: %s%n\tBID%12sASK%nVolume@Price – Volume@Price%n", id, ""));
+        result.append(String.format("Order Book: %s%n\tBID%12s%nVolume@Price – Volume@Price%n", id, "ASK"));
         Iterator<Map.Entry<Float, SinglePriceMap>> bidIt = bid.entrySet().iterator();
         Iterator<Map.Entry<Float, SinglePriceMap>> askIt = ask.entrySet().iterator();
         Map.Entry<Float, SinglePriceMap> map;
@@ -152,7 +153,6 @@ public class OrderBook {
             } else {
                 result.append(" ---------       ");
             }
-
             if (askNext) {
                 map = askIt.next();
                 askNext = askIt.hasNext();

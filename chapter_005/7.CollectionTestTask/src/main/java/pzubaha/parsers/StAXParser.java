@@ -46,20 +46,20 @@ public class StAXParser {
         while (reader.hasNext()) {
             if (reader.next() == XMLStreamConstants.START_ELEMENT) {
                 if (reader.isStartElement()) {
-                    if (reader.getLocalName().charAt(0) == 'A') {
-                        book = reader.getAttributeValue(0);
+                    book = reader.getAttributeValue(null, "book");
+                    if ("AddOrder".equals(reader.getLocalName())) {
                         if (!orders.containsKey(book)) {
                             orderBook = new OrderBook(book);
                             orders.put(book, orderBook);
                         } else {
                             orderBook = orders.get(book);
                         }
-                        orderBook.addOrder(OrderBook.OPERATION.valueOf(reader.getAttributeValue(1)),
-                                Integer.parseInt(reader.getAttributeValue(4)),
-                                Integer.parseInt(reader.getAttributeValue(3)),
-                                Float.parseFloat(reader.getAttributeValue(2)));
+                        orderBook.addOrder(OrderBook.OPERATION.valueOf(reader.getAttributeValue(null, "operation")),
+                                Integer.parseInt(reader.getAttributeValue(null,"orderId")),
+                                Integer.parseInt(reader.getAttributeValue(null, "volume")),
+                                Float.parseFloat(reader.getAttributeValue(null, "price")));
                     } else {
-                        orders.get(reader.getAttributeValue(0)).delOrder(Integer.parseInt(reader.getAttributeValue(1)));
+                        orders.get(book).delOrder(Integer.parseInt(reader.getAttributeValue(null, "orderId")));
                     }
                 }
             }
