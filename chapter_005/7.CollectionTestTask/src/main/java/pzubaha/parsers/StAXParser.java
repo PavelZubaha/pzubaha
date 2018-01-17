@@ -55,7 +55,7 @@ public class StAXParser {
                             orderBook = orders.get(book);
                         }
                         orderBook.addOrder(OrderBook.OPERATION.valueOf(reader.getAttributeValue(null, "operation")),
-                                Integer.parseInt(reader.getAttributeValue(null,"orderId")),
+                                Integer.parseInt(reader.getAttributeValue(null, "orderId")),
                                 Integer.parseInt(reader.getAttributeValue(null, "volume")),
                                 Float.parseFloat(reader.getAttributeValue(null, "price")));
                     } else {

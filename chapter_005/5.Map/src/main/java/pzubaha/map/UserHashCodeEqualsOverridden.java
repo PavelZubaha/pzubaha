@@ -45,4 +45,13 @@ public class UserHashCodeEqualsOverridden extends UserHashCodeOverridden {
         }
         return result;
     }
+
+    /**
+     * HashCode for building project, check maven checkstyle.
+     * @return hashcode.
+     */
+    @Override
+    public int hashCode() {
+        return super.hashCode();
+    }
 }
