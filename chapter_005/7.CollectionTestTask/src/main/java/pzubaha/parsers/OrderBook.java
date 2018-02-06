@@ -106,7 +106,6 @@ public class OrderBook {
             sum += value.vol;
             return super.put(key, value);
         }
-
         @Override
         public boolean remove(Object key, Object value) {
             boolean result = super.remove(key, value);
@@ -139,27 +138,17 @@ public class OrderBook {
      */
     public StringBuilder print() {
         StringBuilder result = new StringBuilder(512);
-        result.append(String.format("Order Book: %s%n\tBID%12s%nVolume@Price – Volume@Price%n", id, "ASK"));
+        result.append(String.format("%nBook: %s%n%-12s%s%12s%n", id, "ASK", "price", "BID"));
         Iterator<Map.Entry<Float, SinglePriceMap>> bidIt = bid.entrySet().iterator();
-        Iterator<Map.Entry<Float, SinglePriceMap>> askIt = ask.entrySet().iterator();
-        Map.Entry<Float, SinglePriceMap> map;
-        boolean bidNext = bidIt.hasNext();
-        boolean askNext = askIt.hasNext();
-        while (bidNext || askNext) {
-            if (bidNext) {
-                map = bidIt.next();
-                bidNext = bidIt.hasNext();
-                result.append(String.format("%4d@%-12.2f", map.getValue().sum, map.getKey()));
-            } else {
-                result.append(" ---------       ");
-            }
-            if (askNext) {
-                map = askIt.next();
-                askNext = askIt.hasNext();
-                result.append(String.format("%4d@%.2f%n", map.getValue().sum, map.getKey()));
-            } else {
-                result.append(String.format("---------%n"));
-            }
+        Iterator<Map.Entry<Float, SinglePriceMap>> askIt = ask.descendingMap().entrySet().iterator();
+        Map.Entry<Float, SinglePriceMap> entry;
+        while (askIt.hasNext()) {
+            entry = askIt.next();
+            result.append(String.format("%-10d%7.2f%n", entry.getValue().sum, entry.getKey()));
+        }
+        while (bidIt.hasNext()) {
+            entry = bidIt.next();
+            result.append(String.format("%17.2f%12d%n", entry.getKey(), entry.getValue().sum));
         }
         return result;
     }

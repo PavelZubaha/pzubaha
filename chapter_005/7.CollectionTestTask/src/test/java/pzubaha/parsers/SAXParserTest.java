@@ -30,7 +30,7 @@ public class SAXParserTest {
      * processing conditions.
      */
     @Test
-    public void whenInputSomeXMLThenParserShouldParseItCorrectly() throws IOException, XMLStreamException {
+    public void whenInputSomeXMLThenParserShouldParseItCorrectly() throws IOException, XMLStreamException, InterruptedException {
         StringBuilder builder = new StringBuilder(256);
         builder.append("<?xml version=\"1.0\" encoding=\"UTF-8\"?>");
         builder.append("<Orders>");
