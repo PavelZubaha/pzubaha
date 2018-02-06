@@ -6,4 +6,3 @@
 # 
 # I follow next goals:
 # 
-# 1. Before 01.01.18 to finish courses with strong knowledge.
