@@ -42,6 +42,7 @@ public class Counter {
                         count++;
                     }
                 }
+                isr.close();
             } catch (IOException ioe) {
                 ioe.printStackTrace();
             }
@@ -70,6 +71,7 @@ public class Counter {
                         }
                     }
                 }
+                isr.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
