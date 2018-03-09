@@ -15,8 +15,8 @@ import java.io.Reader;
  * @version 1
  */
 public class CountChar extends Thread implements Runnable {
-    private Reader r;
-    private Container<Integer> counter;
+    private final Reader r;
+    private final Container<Integer> counter;
     public CountChar(Reader r, Container<Integer> counterVal) {
         this.r = r;
         this.counter = counterVal;

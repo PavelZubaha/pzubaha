@@ -14,8 +14,8 @@ import java.util.Random;
  * @version 1
  */
 class RunnableTest implements Runnable {
-    Bank bank;
-    Random random = new Random();
+    final Bank bank;
+    final Random random = new Random();
     public RunnableTest(Bank b) {
         this.bank = b;
     }

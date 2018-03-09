@@ -12,8 +12,8 @@ package pzubaha.threads;
  * @version 1
  */
 public class Time extends Thread implements Runnable {
-    private Thread another;
-    private long workTimeMs;
+    private final Thread another;
+    private final long workTimeMs;
 
     public Time(Thread another, long workTimeMs) {
         this.another = another;

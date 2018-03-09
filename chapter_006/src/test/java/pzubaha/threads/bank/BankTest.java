@@ -15,7 +15,7 @@ import org.junit.Test;
  */
 public class BankTest {
     @Test
-    public void whenProcessSomeTaskThenTotalBalansOfBankWillChange() {
+    public void whenProcessSomeTaskThenTotalBalanceOfBankWillChange() {
         Bank bank = new Bank();
         bank.fillAccounts();
         int afterBalance = bank.process();

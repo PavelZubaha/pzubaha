@@ -23,7 +23,7 @@ public class Bank {
     /**
      * List of accounts.
      */
-    private List<BankAccount> accounts = new ArrayList<>(100);
+    private final List<BankAccount> accounts = new ArrayList<>(100);
 
     /**
      * Fill accounts before illustration.
@@ -86,8 +86,8 @@ public class Bank {
     public int process() {
         System.out.printf("Total balance of bank accounts is: %d%n", this.getSum());
         List<Thread> threads = new ArrayList<>(100);
-        Thread view = new ShowThread();
-        view.start();
+        Thread showThread = new ShowThread();
+        showThread.start();
         try {
             Thread.sleep(1000);
         } catch (InterruptedException e) {
@@ -104,7 +104,7 @@ public class Bank {
                 e.printStackTrace();
             }
         }
-        view.interrupt();
+        showThread.interrupt();
         System.out.printf("Total balance of bank accounts is: %d%n", this.getSum());
         return this.getSum();
     }
