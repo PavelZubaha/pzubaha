@@ -1,5 +1,9 @@
 package pzubaha.list;
 
+import net.jcip.annotations.GuardedBy;
+import net.jcip.annotations.ThreadSafe;
+
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -7,45 +11,57 @@ import java.util.NoSuchElementException;
  * Chapter_005. Collection. Pro.
  * List.
  * <p>
- * Contains solution of task 159.
+ * Contains solution of task 1105.
  * Class represents simple linked list.
- * Created 06.11.2017.
+ * Thread safe implementation.
+ * Created 08.03.2018.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
  */
+@ThreadSafe
 public class LinkedListContainer<E> implements AbstractContainer<E> {
     /**
      * First Node.
      */
-    private Node<E> first = null;
+    @GuardedBy("this")
+    private Node<E> first;
 
     /**
      * Last Node.
      */
-    private Node<E> last = null;
+    @GuardedBy("this")
+    private Node<E> last;
 
     /**
      * Size of linked sequence.
      */
+    @GuardedBy("this")
     private int size = 0;
+
+    /**
+     * Counter of modifications, for implementing fail-fast behavior of iterators.
+     */
+    @GuardedBy("this")
+    private int modCount = 0;
 
     /**
      * Add element method to the end of sequence.
      * @param e element to add.
      */
     @Override
-    public final void add(E e) {
+    public synchronized final void add(E e) {
         if (e != null) {
             if (first != null) {
-                last.next = new Node<E>(e);
+                last.next = new Node<>(e);
                 last.next.previous = last;
                 last = last.next;
             } else {
-                first = new Node<E>(e);
+                first = new Node<>(e);
                 last = first;
             }
             size++;
+            modCount++;
         }
     }
 
@@ -55,7 +71,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * @param position specified position of element to add,
      *                 it begins from 0.
      */
-    public final void add(E e, int position) {
+    public synchronized final void add(E e, int position) {
         if (position > size) {
             throw new IndexOutOfBoundsException();
         }
@@ -80,6 +96,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
                     node.linkPrevious(prevOfSpec);
                 }
                 size++;
+                modCount++;
             }
         } else {
             throw new NullPointerException();
@@ -92,7 +109,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * @return E element.
      */
     @Override
-    public final E get(int index) {
+    public synchronized final E get(int index) {
         return findNode(index).element;
     }
 
@@ -101,15 +118,15 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * @return Iterator.
      */
     @Override
-    public final Iterator<E> iterator() {
-        return new It();
+    public synchronized final Iterator<E> iterator() {
+        return new It(first, modCount);
     }
 
     /**
      * Try is container empty.
      * @return condition true if empty.
      */
-    public boolean isEmpty() {
+    public synchronized boolean isEmpty() {
         return size == 0;
     }
 
@@ -117,7 +134,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * Get size.
      * @return size.
      */
-    public final int size() {
+    public synchronized final int size() {
         return size;
     }
 
@@ -125,8 +142,9 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * Remove element by index
      * @param index index of element to delete
      * @return wrapped item in the removing Node.
+     * @throws NoSuchElementException when specified index < 0, index >= size.
      */
-    public final E remove(int index) {
+    public final synchronized E remove(int index) throws NoSuchElementException {
         final Node<E> x = findNode(index);
         final Node<E> prev = x.previous;
         final Node<E> nxt = x.next;
@@ -150,6 +168,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
             }
         }
         size--;
+        modCount--;
         x.next = null;
         x.previous = null;
         x.element = null;
@@ -162,7 +181,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * @return Node.
      * @throws NoSuchElementException when index not correct.
      */
-    private Node<E> findNode(int index) {
+    private synchronized Node<E> findNode(int index) {
         if (index >= 0 && index < size) {
             Node<E> result;
             if (index < size >> 1) {
@@ -186,9 +205,20 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
      * Iterator class for implements Iterable by LinkedListContainer.
      */
     private class It implements Iterator<E> {
-        Node<E> itNext = first;
+        Node<E> itNext;
+        int modifications;
+
+        private It(Node<E> itNext, int modifications) {
+            this.itNext = itNext;
+            this.modifications = modifications;
+        }
         public boolean hasNext() {
-            return itNext != null;
+            synchronized (LinkedListContainer.this) {
+                if (modifications != modCount) {
+                    throw new ConcurrentModificationException();
+                }
+                return itNext != null;
+            }
         }
         public E next() {
             if (hasNext()) {
@@ -202,29 +232,30 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
     }
     /**
      * Class for store and link.
-     * @param <E> parametrized type.
+     * @param <F> parametrized type.
      */
-    private static class Node<E> {
+    private class Node<F> {
         /**
          * Element.
          */
-        E element;
+        F element;
+
 
         /**
          * Link to previous Node.
          */
-        Node<E> previous;
+        Node<F> previous;
 
         /**
          * Link to next Node.
          */
-        Node<E> next;
+        Node<F> next;
 
         /**
          * Constructor.
          * @param value value which will be stored.
          */
-        Node(E value) {
+        Node(F value) {
             this.element = value;
         }
 
@@ -232,7 +263,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
          * Connect this Node to another, which will be next.
          * @param another another Node.
          */
-        void linkNext(Node<E> another) {
+        void linkNext(Node<F> another) {
             this.next = another;
             another.previous = this;
         }
@@ -241,7 +272,7 @@ public class LinkedListContainer<E> implements AbstractContainer<E> {
          * Connect this Node to another, which will be previous.
          * @param another another Node.
          */
-        void linkPrevious(Node<E> another) {
+        void linkPrevious(Node<F> another) {
             this.previous = another;
             another.next = this;
         }

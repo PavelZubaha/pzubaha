@@ -3,6 +3,7 @@ package pzubaha.list;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.util.ConcurrentModificationException;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
@@ -77,6 +78,17 @@ public class LinkedListContainerTest {
         assertThat(it.next(), is(second));
         assertTrue(it.hasNext());
         assertThat(it.next(), is(third));
+        it.next();
+    }
+    /**
+     * Test iterator fail-fast.
+     */
+    @Test(expected = ConcurrentModificationException.class)
+    public void checkIteratorFailFastBehavior() {
+        Iterator<String> it = testedLLC.iterator();
+        assertTrue(it.hasNext());
+        assertThat(it.next(), is(first));
+        testedLLC.remove(2);
         it.next();
     }
 }
