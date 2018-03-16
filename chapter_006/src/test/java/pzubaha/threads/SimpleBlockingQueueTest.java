@@ -32,10 +32,15 @@ public class SimpleBlockingQueueTest {
         Thread consumer = new Thread() {
             @Override
             public void run() {
-                for (int i = 0; i != 6; i++) {
-                    System.out.println(String.format("%s - try to poll", Thread.currentThread().getName()));
-                    System.out.println(String.format("%s - print polled value: %d", Thread.currentThread().getName(), sbq.poll()));
+                try {
+                    for (int i = 0; i != 6; i++) {
+                        System.out.println(String.format("%s - try to poll", Thread.currentThread().getName()));
+                        System.out.println(String.format("%s - print polled value: %d", Thread.currentThread().getName(), sbq.poll()));
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                 }
+
             }
         };
         producer.start();

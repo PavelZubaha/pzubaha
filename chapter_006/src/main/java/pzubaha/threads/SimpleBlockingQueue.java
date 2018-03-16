@@ -31,7 +31,7 @@ public class SimpleBlockingQueue<T> {
 
     /**
      * Constructor.
-     * @param cap max capacity.
+     * @param capacity max capacity.
      */
     public SimpleBlockingQueue(int capacity) {
         this.capacity = capacity;
@@ -68,19 +68,25 @@ public class SimpleBlockingQueue<T> {
      * or returns null if this queue is empty.
      * @return the head of this queue, or null if this queue is empty.
      */
-    public T poll() {
+    public T poll() throws InterruptedException {
         T value;
         synchronized (this) {
             while (queue.isEmpty()) {
-                try {
-                    this.wait();
-                } catch (InterruptedException e) {
-                    System.out.printf("%s interrupted while wait poll%n", Thread.currentThread().getName());
-                }
+                this.wait();
             }
             value =  queue.poll();
             this.notify();
         }
         return value;
+    }
+
+    /**
+     * Try is queue empty ?
+     * @return true if this queue is empty, false otherwise.
+     */
+    public boolean isEmpty() {
+        synchronized (this) {
+            return queue.isEmpty();
+        }
     }
 }
