@@ -47,7 +47,7 @@ public class DOMParser {
         OrderBook orderBook;
         Node node;
         String bookName;
-        //When parse 300 000 elements it takes 11 - 16 sec.
+        //When parse 300 000 elements it takes 11 - 20 sec.
         //Parsing more 320 000 - 360 000 throws OutOfMemoryError.
         for (int i = 0; i < Math.min(200000, nl.getLength()); i++) {
             node = nl.item(i);

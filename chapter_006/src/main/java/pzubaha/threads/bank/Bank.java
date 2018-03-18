@@ -89,7 +89,7 @@ public class Bank {
         Thread showThread = new ShowThread();
         showThread.start();
         try {
-            Thread.sleep(1000);
+            Thread.sleep(100);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }

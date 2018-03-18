@@ -23,17 +23,12 @@ class RunnableTest implements Runnable {
     /**
      * Transfer random amount of money(0 - 100),
      * from random(0 - 100) bank account to another one.
-     * Task run 2000 times by each of 100 threads.
+     * Task run 1000 times by each of 100 threads.
      */
     @Override
     public void run() {
         int from, to, transfer;
-        for (int j = 0; j != 2000; j++) {
-            try {
-                Thread.sleep(2);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+        for (int j = 0; j != 1000; j++) {
             transfer = random.nextInt(100);
             from = random.nextInt(100);
             if (bank.getAccount(from).withdraw(transfer)) {

@@ -10,6 +10,8 @@ import java.io.InputStream;
 import java.util.Queue;
 import java.util.SortedMap;
 import java.util.TreeMap;
+import java.util.concurrent.ArrayBlockingQueue;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.ConcurrentLinkedQueue;
 
 /**
@@ -141,7 +143,8 @@ public class StAXParser {
      * processing conditions.
      */
     public SortedMap<String, OrderBook> parse(InputStream is) throws FileNotFoundException, XMLStreamException, InterruptedException {
-        ConcurrentLinkedQueue<OrderEntity> bq = new ConcurrentLinkedQueue<>();
+        //ConcurrentLinkedQueue<OrderEntity> bq = new ConcurrentLinkedQueue<>();
+        BlockingQueue<OrderEntity> bq = new ArrayBlockingQueue<OrderEntity>(512);
         Thread readThread = new ReaderThread(bq, is);
         readThread.start();
         SortedMap<String, OrderBook> orders = new TreeMap<>(String::compareTo);
