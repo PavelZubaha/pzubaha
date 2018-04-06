@@ -1,4 +1,4 @@
-package pzubaha.threads;
+package pzubaha.threads.pool;
 
 
 import org.junit.Before;
@@ -36,6 +36,7 @@ public class ThreadPoolTest {
      */
     @Test
     public void resultOfPerforming100TasksShouldBeDefined() {
+        threadPool.init();
         final int expectedResult = 50_050_000;
         AtomicInteger atomicInteger = new AtomicInteger(0);
         class SimpleWork implements Work {
@@ -56,7 +57,6 @@ public class ThreadPoolTest {
             threadPool.add(new SimpleWork(atomicInteger));
         }
         threadPool.shutDown();
-        threadPool.joinAll();
         assertThat(expectedResult, is(atomicInteger.intValue()));
     }
 
@@ -67,6 +67,7 @@ public class ThreadPoolTest {
      */
     @Test(expected = ThreadPool.ThreadPoolShutDownException.class)
     public void addAfterShutDownShouldThrowsException() throws InterruptedException {
+        threadPool.init();
         for (int i = 0; i != 10; i++) {
             threadPool.add(new TestWork());
         }

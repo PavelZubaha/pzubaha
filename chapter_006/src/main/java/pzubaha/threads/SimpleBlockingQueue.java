@@ -59,7 +59,7 @@ public class SimpleBlockingQueue<T> {
                 }
             }
             queue.offer(value);
-            this.notify();
+            this.notifyAll();
         }
     }
 
