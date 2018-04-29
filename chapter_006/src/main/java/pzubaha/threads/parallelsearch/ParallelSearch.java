@@ -99,7 +99,6 @@ public class ParallelSearch {
                         if (path != null) {
                             try {
                                 processFile(path);
-
                             } catch (IOException e) {
                                 e.printStackTrace();
                             }
