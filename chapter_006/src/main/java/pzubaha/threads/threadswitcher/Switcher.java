@@ -74,7 +74,7 @@ public class Switcher {
                 wait();
             }
         } else {
-            this.notifyAll();
+            notifyAll();
             Thread.currentThread().interrupt();
         }
     }
@@ -98,6 +98,7 @@ public class Switcher {
     public void initTwoWorkers(int firstVal, int secondVal) throws InterruptedException {
         Worker worker1 = new Worker(this, firstVal);
         worker1.start();
+        Thread.sleep(2);
         Worker worker2 = new Worker(this, secondVal);
         worker2.start();
         worker1.join();
@@ -133,7 +134,7 @@ class Worker extends Thread {
      * @param args args
      */
     public static void main(String[] args) {
-        Switcher switcher = new Switcher(30, 10);
+        Switcher switcher = new Switcher(22, 10);
         try {
             switcher.initTwoWorkers(1, 2);
         } catch (InterruptedException e) {
