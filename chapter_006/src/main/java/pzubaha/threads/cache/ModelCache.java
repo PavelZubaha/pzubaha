@@ -46,17 +46,14 @@ public class ModelCache<K, V> {
      */
     public boolean update(K key, Item<V> upDateValue) {
         final boolean[] updated = {false};
-        map.computeIfPresent(key, new BiFunction<K, Item<V>, Item<V>>() {
-            @Override
-            public Item<V> apply(K key, Item<V> value) {
-                if (value != null && value.getVersion() == upDateValue.getVersion()) {
-                    value.updateContext(upDateValue.getContext());
-                    updated[0] = true;
-                } else {
-                    throw new OptimisticException(String.format("Concurrent modification of the item container %s", value.toString()));
-                }
-                return value;
+        map.computeIfPresent(key, (key1, value) -> {
+            if (value.getVersion() == upDateValue.getVersion()) {
+                value.updateContext(upDateValue.getContext());
+                updated[0] = true;
+            } else {
+                throw new OptimisticException(String.format("Concurrent modification of the item container %s", value.toString()));
             }
+            return value;
         });
         return updated[0];
     }
@@ -68,12 +65,9 @@ public class ModelCache<K, V> {
      */
     public boolean delete(K key) {
         final boolean[] deleted = {false};
-        map.computeIfPresent(key, new BiFunction<K, Item<V>, Item<V>>() {
-            @Override
-            public Item<V> apply(K key, Item<V> v) {
-                deleted[0] = true;
-                return null;
-            }
+        map.computeIfPresent(key, (key1, v) -> {
+            deleted[0] = true;
+            return null;
         });
         return deleted[0];
     }
