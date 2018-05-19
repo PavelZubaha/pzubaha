@@ -1,6 +1,7 @@
 package pzubaha.characterfinder;
 
-import java.util.HashSet;
+import java.util.HashMap;
+import java.util.Iterator;
 
 /**
  * Chapter_005.
@@ -18,18 +19,28 @@ public class CharChecker {
     /**
      * Set of chars of first string.
      */
-    private HashSet<Character> set = new HashSet<>();
+    private HashMap<Character, Integer> map = new HashMap<>();
 
     /**
      * Indexing string.
      * @param str some string.
      */
     public void indexString(String str) {
-        if (str != null) {
-            this.set = new HashSet<>(str.length(), 1F);
-            for (char c : str.toCharArray()) {
-                set.add(c);
-            }
+        if (str == null) {
+            return;
+        }
+        this.map = new HashMap<>(str.length(), 1F);
+        fillMap(str, map);
+    }
+
+    /**
+     * Fill some HashMap with chars from specified string.
+     * @param str given string as source of chars.
+     * @param mapContainer map for char as key and single char amount as value.
+     */
+    private void fillMap(String str, HashMap<Character, Integer> mapContainer) {
+        for (char c : str.toCharArray()) {
+            mapContainer.compute(c, (character, integer) -> integer == null ? 1 : integer + 1);
         }
     }
 
@@ -39,12 +50,17 @@ public class CharChecker {
      * @return true if all characters from specified string,
      * are contained in indexed one. Other wise false.
      */
-    public boolean isCharsContais(String str) {
+    public boolean isCharsContains(String str) {
         boolean result = false;
         if (str != null) {
             result = true;
-            for (char c: str.toCharArray()) {
-                if (!set.contains(c)) {
+            HashMap<Character, Integer> strCharMap = new HashMap<>(str.length(), 1F);
+            fillMap(str, strCharMap);
+            Iterator<Character> iterator = strCharMap.keySet().iterator();
+            Character character;
+            while (iterator.hasNext()) {
+                character = iterator.next();
+                if (!map.containsKey(character) || map.get(character) < strCharMap.get(character)) {
                     result = false;
                     break;
                 }

@@ -19,8 +19,8 @@ import static org.junit.Assert.*;
  * @version 1
  */
 public class CharCheckerTest {
-    CharChecker cc;
-    String first;
+    private CharChecker cc;
+    private String first;
     @Before
     public void setUp() throws Exception {
         cc = new CharChecker();
@@ -30,17 +30,23 @@ public class CharCheckerTest {
     public void whenFirstStringContainsAllOfSecondStringCharsThenReturnTrueOtherwiseFalse() {
         first = "abcdefghijklmn";
         cc.indexString(first);
-        assertTrue(cc.isCharsContais("dca"));
-        assertTrue(cc.isCharsContais("dca"));
-        assertFalse(cc.isCharsContais("123"));
+        assertTrue(cc.isCharsContains("dca"));
+        assertTrue(cc.isCharsContains("dca"));
+        assertFalse(cc.isCharsContains("123"));
     }
 
     @Test
     public void whenFirstOrSecondStringIsNullThenReturnsFalse() {
         cc.indexString(null);
-        assertFalse(cc.isCharsContais("a"));
+        assertFalse(cc.isCharsContains("a"));
         cc.indexString("A");
-        assertFalse(cc.isCharsContais(null));
+        assertFalse(cc.isCharsContains(null));
     }
-
+    @Test
+    public void whenStrigsHasDuplicatesItConsiderTheirsAmount() {
+        first = "aab";
+        cc.indexString(first);
+        assertFalse(cc.isCharsContains("abb"));
+        assertTrue(cc.isCharsContains("baa"));
+    }
 }
