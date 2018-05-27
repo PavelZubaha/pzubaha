@@ -9,7 +9,7 @@ import static org.junit.Assert.*;
  * Chapter_005.
  * Java Collection Framework.
  * Additional Task.
- * Task 50316.
+ * Task 53676.
  *
  * There are two strings.
  * Are there characters in second string present in the first one?

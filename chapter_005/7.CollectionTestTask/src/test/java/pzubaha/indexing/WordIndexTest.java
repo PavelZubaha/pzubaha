@@ -9,8 +9,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.Iterator;
 import java.util.Set;
 
+import static org.hamcrest.core.Is.is;
 import static org.junit.Assert.*;
 
 /**
@@ -50,13 +54,14 @@ public class WordIndexTest {
      * @throws IOException throw when file not found etc.
      */
     @Test
-    public void whenLoadFileThenCallgetIndexes4WOrldThenSetReturned() throws IOException {
+    public void whenLoadFileThenCallGetIndexes4WOrldThenSetReturned() throws IOException {
         WordIndex wi = new WordIndex();
         wi.loadFile(file.getPath());
         positions = wi.getIndexes4Word(searchWord);
         //check real positions of the search word "test" in the test string.
-        assertTrue(positions.contains(1));
-        assertTrue(positions.contains(11));
+        Iterator<Integer> iterator = positions.iterator();
+        assertThat(iterator.next(), is(0));
+        assertThat(iterator.next(), is(10));
     }
 
     /**
@@ -72,6 +77,16 @@ public class WordIndexTest {
         assertNull(positions);
         positions = wi.getIndexes4Word(null);
         assertNull(positions);
+    }
+
+    @Test
+    public void callIndexOfReturnsSameResultWithCallingGetIndexes4Word() throws IOException {
+        String word4Search = "Test";
+        WordIndex wi = new WordIndex();
+        wi.loadFile(file.getPath());
+        positions = wi.getIndexes4Word(word4Search);
+        int indexOf = new String(Files.readAllBytes(Paths.get(file.getPath()))).indexOf(word4Search);
+        assertThat(positions.iterator().next(), is(indexOf));
     }
     /**
      * Deleting TEST file.
