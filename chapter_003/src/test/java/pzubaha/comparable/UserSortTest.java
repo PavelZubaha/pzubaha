@@ -45,7 +45,7 @@ public class UserSortTest {
         //assign expected String
         String expected = String.format("[%s, %s, %s, %s, %s, %s]", user3, user6, user2, user5, user1, user4);
 
-        //check result of pzubaha.comparable.User.sort(list)
+        //check result of User.sort(list)
         assertThat(us.sort(list).toString(), is(expected));
     }
 
@@ -121,7 +121,7 @@ public class UserSortTest {
         //assign expected String
         String expected = String.format("[%s, %s, %s]", user1, user2, user3);
 
-        //check result of pzubaha.comparable.User.sort(list)
+        //check result of User.sort(list)
         assertThat(us.sort(list).toString(), is(expected));
     }
 }
