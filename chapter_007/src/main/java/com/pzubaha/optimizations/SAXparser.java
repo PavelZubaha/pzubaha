@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 /**
+ * Parser for xml
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
  * @version 1
  */

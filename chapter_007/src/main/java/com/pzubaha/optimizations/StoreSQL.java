@@ -4,6 +4,7 @@ import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import java.io.*;
+import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Paths;
@@ -36,7 +37,7 @@ import java.util.List;
  * <entry href="2"/>
  * </entries>
  * 5. Parsing dest.xml and output sum of values.
- * 6. Time of working with N (~1000000) should be not bigger than 5min
+ * 6. Time of working with N (~1000000) should be not bigger than 5min.
  *
  * StoreSQL.
  * Class proves connection to sqlite using JDBC, creating DB and inserting some values.
@@ -45,14 +46,15 @@ import java.util.List;
  */
 public class StoreSQL {
     private final String diverName = "org.sqlite.JDBC";
-    private final String connectionURL =
-            String.format("jdbc:sqlite:%s",
-            Paths.get("chapter_007\\src\\main\\resources\\db\\db.db")
-                    .toAbsolutePath()
-                    .toString());
+    private URL dbUrl = null;
     private Connection con = null;
+    
 
-    public void initDB() {
+
+    /**
+     * Register sqlite JDBC driver, get connection.
+     */
+    public void initDB() throws FileNotFoundException {
         try {
             Class.forName(diverName);
         } catch (ClassNotFoundException e) {
@@ -61,7 +63,12 @@ public class StoreSQL {
             return;
         }
         try {
-            con = DriverManager.getConnection(connectionURL);
+            dbUrl = getClass().getResource("/db/db.db");
+            if (dbUrl == null) {
+                System.out.println("db file is not found");
+                throw new FileNotFoundException();
+            }
+            con = DriverManager.getConnection("jdbc:sqlite::resource:" + dbUrl.toString());
             if (con != null) {
                 DatabaseMetaData meta = con.getMetaData();
                 System.out.println("The driver name is " + meta.getDriverName());
@@ -73,8 +80,11 @@ public class StoreSQL {
         }
     }
 
+    /**
+     * Generate entries integer 1...n specified amount.
+     * @param n amount of entries.
+     */
     public void generate(int n) {
-        Paths.get("chapter_007\\src\\main\\resources\\db\\db.db").toAbsolutePath().toString();
         try {
             con.setAutoCommit(false);
             Statement statement = con.createStatement();
@@ -97,15 +107,24 @@ public class StoreSQL {
         }
     }
 
-    private void insert(int n, Statement statement) throws SQLException {
+    /**
+     * Inserting  1, 2...n entries to database.
+     * @param n insert
+     * @param statement statement that used for making insertion.
+     */
+    private void insert(int n, Statement statement) {
         StringBuilder builder = new StringBuilder(1024);
         builder.append("INSERT INTO 'entry' (field) VALUES ");
         for (int i = 1; i <= n; i++) {
             builder.append(String.format("(%d), ", i));
         }
         builder.delete(builder.lastIndexOf(","), builder.length()).append(";");
-        statement.execute(builder.toString());
-        con.commit();
+        try {
+            statement.execute(builder.toString());
+            con.commit();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private List<Entry> readEntries() {
@@ -125,9 +144,13 @@ public class StoreSQL {
     }
 
     public static void main(String[] args) {
-        File file = new File(Paths.get("chapter_007\\src\\main\\resources\\db\\target.xml").toAbsolutePath().toString());
-        File dest = new File(Paths.get("chapter_007\\src\\main\\resources\\db\\dest.xml").toAbsolutePath().toString());
-        File schema = new File(Paths.get("chapter_007\\src\\main\\resources\\db\\schema.xml").toAbsolutePath().toString());
+        final URL targetFileURL = StoreSQL.class.getResource("/db/target.xml");
+        final URL destFileURL = StoreSQL.class.getResource("/db/dest.xml");
+        final URL schemaFileURL = StoreSQL.class.getClass().getResource("/db/schema.xml");
+        final File targetFile = new File(targetFileURL.getFile());
+        final File destFile = new File(destFileURL.getFile());
+        final File schemaFile = new File(schemaFileURL.getFile());
+        final int ENTRIES_AMOUNT = 5;
         final String xsl = String.format("%s%s%s%s%s%s%s%s%s%s%s%s%s%s%s",
                 "<?xml version=\"1.0\"?>\n",
                 "<xsl:stylesheet xmlns:xsl=\"http://www.w3.org/1999/XSL/Transform\" version=\"1.0\">\n",
@@ -145,21 +168,19 @@ public class StoreSQL {
                 "</xsl:template>",
                 "</xsl:stylesheet>");
         try {
-            Files.write(Paths.get(schema.getAbsolutePath()), xsl.getBytes(StandardCharsets.UTF_8));
-            file.createNewFile();
-            dest.createNewFile();
+            Files.write(Paths.get(schemaFile.getAbsolutePath()), xsl.getBytes(StandardCharsets.UTF_8));
 //            file.deleteOnExit();
-            StoreXML storeXML = new StoreXML(file);
             StoreSQL storeSQL = new StoreSQL();
+            StoreXML storeXML = new StoreXML(targetFile);
             storeSQL.initDB();
-            storeSQL.generate(2);
+            storeSQL.generate(ENTRIES_AMOUNT);
             List<Entry> list = storeSQL.readEntries();
 //            System.out.println(list);
             storeXML.save(list);
-            ConvertXSQT.convert(file, dest, schema);
+            ConvertXSQT.convert(targetFile, destFile, schemaFile);
 //            System.out.println(new String(Files.readAllBytes(Paths.get(dest.getPath())), StandardCharsets.UTF_8));
             SAXparser xparser = new SAXparser();
-            System.out.printf("Total result: %d", xparser.parse(dest));
+            System.out.printf("Total result: %d", xparser.parse(destFile));
         } catch (IOException | SAXException | ParserConfigurationException e) {
             e.printStackTrace();
         }

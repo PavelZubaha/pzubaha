@@ -15,7 +15,13 @@ import java.io.FileReader;
  * @version 1
  */
 public class ConvertXSQT {
-    public static void convert(File source, File dest, File schema) {
+    /**
+     * Convert xml document from source file to the dest file according to the spec schema.
+     * @param source file.
+     * @param dest destination file.
+     * @param schema schema file.
+     */
+    public static void  convert(File source, File dest, File schema) {
         TransformerFactory factory = TransformerFactory.newInstance();
         try {
             Transformer transformer = factory.newTransformer(new StreamSource(new FileReader(schema)));
