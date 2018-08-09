@@ -39,6 +39,7 @@ public class TrackerDB extends Tracker implements AutoCloseable {
         Connection c;
         String drivers = p.getProperty("jdbc.drivers");
         try {
+            System.out.println(drivers);
             Class.forName(drivers);
         } catch (ClassNotFoundException e) {
             System.out.println("JDBC Driver not found");

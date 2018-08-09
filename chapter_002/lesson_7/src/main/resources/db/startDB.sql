@@ -1,0 +1,50 @@
+CREATE TABLE IF NOT EXISTS rules  (
+  rule_id SERIAL PRIMARY KEY,
+  rule_desc TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS roles (
+  role_id SERIAL PRIMARY KEY,
+  role_desc TEXT NOT NULL
+);
+CREATE TABLE IF NOT EXISTS  rules_to_role (
+  role_id INTEGER NOT NULL REFERENCES roles,
+  rule_id INTEGER NOT NULL REFERENCES rules,
+  PRIMARY KEY(role_id, rule_id)
+);
+CREATE TABLE IF NOT EXISTS  users (
+  user_id SERIAL PRIMARY KEY,
+  user_name VARCHAR(128) NOT NULL,
+  user_email VARCHAR(128) NOT NULL UNIQUE,
+  user_password VARCHAR(128) NOT NULL,
+  user_registration  TIMESTAMP NOT NULL DEFAULT NOW(),
+  role_id INTEGER NOT NULL REFERENCES roles DEFAULT 1
+);
+CREATE TABLE IF NOT EXISTS  category (
+  cat_id SERIAL PRIMARY KEY,
+  cat_name VARCHAR(128) NOT NULL UNIQUE
+);
+CREATE TABLE IF NOT EXISTS  statuses (
+  stat_id  SERIAL PRIMARY KEY,
+  stat_name VARCHAR(64) NOT NULL UNIQUE,
+  stat_desc VARCHAR(256) NOT NULL
+);
+CREATE TABLE IF NOT EXISTS  items (
+  item_id SERIAL PRIMARY KEY,
+  item_name VARCHAR(128),
+  item_desc TEXT NOT NULL,
+  item_date TIMESTAMP NOT NULL DEFAULT NOW(),
+  stat_id INTEGER NOT NULL REFERENCES statuses,
+  cat_id INTEGER NOT NULL REFERENCES category,
+  user_id INTEGER NOT NULL REFERENCES users
+);
+CREATE TABLE IF NOT EXISTS  attaches (
+  file_id SERIAL PRIMARY KEY,
+  file_path VARCHAR(256),
+  file_name VARCHAR(256),
+  item_id INTEGER NOT NULL REFERENCES items
+);
+CREATE TABLE IF NOT EXISTS  comments (
+  comment_id SERIAL PRIMARY KEY,
+  comment_body TEXT,
+  item_id INTEGER NOT NULL REFERENCES items
+);
