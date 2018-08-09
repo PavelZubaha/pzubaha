@@ -1,10 +1,11 @@
 package pzubaha.classes.inner.start;
 
-
-import pzubaha.classes.inner.models.Item;
+import pzubaha.classes.inner.models.User;
 import pzubaha.classes.inner.templates.BaseAction;
-
-import java.util.List;
+import java.io.IOException;
+import java.io.InputStream;
+import java.sql.SQLException;
+import java.util.Properties;
 
 /**
  * Chapter 2. OOP.
@@ -18,65 +19,54 @@ import java.util.List;
  * @version 2
  */
 public class StartUI {
-	/**
-	 * input field.
-	 */
-	private Input input;
+    /**
+     * input field.
+     */
+    private Input input;
     /**
      * exit from menu loop.
      */
-	private boolean isExit;
-	/**
-	 * Constructor.
-	 * @param input - initialization input in constructor.
-	 */
-	public StartUI(Input input) {
-		this.input = input;
-	}
-	/**
-	 * init - init needed objects(instances).
-	 */
-	public void init() {
-		Tracker tracker = new Tracker();
-		TrackerMenu trackerMenu = new TrackerMenu(this.input, tracker);
-        trackerMenu.fillActions();
-        /**
-         * inner anonymous class for deleting comments.
-         */
-        UserAction delCommentAction = new UserAction() {
-            @Override
-            public int key() {
-                return 8;
-            }
+    private boolean isExit;
+    /**
+     * Constructor.
+     * @param input - initialization input in constructor.
+     */
+    public StartUI(Input input) {
+        this.input = input;
+    }
+    /**
+     * init - init needed objects(instances).
+     */
+    public void init() {
+        Tracker tracker = new Tracker();
+        runTracker(tracker);
+    }
 
+    private void runTracker(Tracker tracker) {
+        final TrackerMenu trackerMenu = new TrackerMenu(this.input, tracker);
+        UserAction loginAction = new BaseAction("Login", 0) {
             @Override
             public void execute(Input input, Tracker tracker) {
-                String iD = input.ask("Enter item Id: ");
-                Item foundItem = tracker.findById(iD);
-                if (foundItem != null) {
-                    List<String> comments = foundItem.getComments();
-                    if (comments.size() != 0) {
-                        int[] commentsRange = new int[comments.size()];
-                        for (int i = 0; i < comments.size(); i++) {
-                            commentsRange[i] = i + 1;
-                        }
-                        int toDeleteCommentNum = input.ask(String.format("%s%n%s", foundItem.showItemComments() + "Enter comment number to delete: "), commentsRange);
-                        foundItem.delComment(toDeleteCommentNum);
-                        input.ask("Comment deleted");
-                    }
-
+                String login;
+                String p;
+                User user = null;
+                login = input.ask("Login: ");
+                p = input.ask("Password: ");
+                user = tracker.getUserByLoginAndPass(login, p);
+                if (user != null) {
+                    System.out.println("Success!");
+                    tracker.setCurUser(user);
+                    trackerMenu.delAction(this);
+                    trackerMenu.fillActions();
                 } else {
-                    input.ask("There is no item with the Id");
+                    System.out.println("Login or password not correct");
+                p = null;
                 }
             }
-
-            @Override
-            public String info() {
-                return String.format("%d%-4s%s", this.key(), ".", "Delete comment");
-            }
         };
+        trackerMenu.addAction(loginAction);
         /**
-         * Inner anonymous abstract class for user action(Exit program).
+         * Inner anonymous class for user action(Exit program).
          */
         BaseAction exitAction = new BaseAction("Exit", 9) {
             /**
@@ -87,19 +77,34 @@ public class StartUI {
                 isExit = true;
             }
         };
-        trackerMenu.addAction(delCommentAction);
+
         trackerMenu.addAction(exitAction);
-		do {
-			trackerMenu.show();
-			trackerMenu.select(input.ask("Select: ", trackerMenu.getActionRange()));
-		} while (!isExit);
-	}
-	/**
-	 * main.
-	 * @param args - args.
-	 */
-	public static void main(String[] args) {
-		Input input = new ValidateInput();
-		new StartUI(input).init();
-	}
+        do {
+            trackerMenu.show();
+            trackerMenu.select(input.ask("Select: ", trackerMenu.getActionRange()));
+        } while (!isExit);
+    }
+
+    private void init(String propertyPath) {
+        Properties props = new Properties();
+        try (InputStream in = getClass().getResourceAsStream(propertyPath)) {
+            props.load(in);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try (TrackerDB tracker = new TrackerDB(props)) {
+            tracker.checkDB();
+            runTracker(tracker);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+    /**
+     * main.
+     * @param args - args.
+     */
+    public static void main(String[] args) {
+        Input input = new ValidateInput();
+        new StartUI(input).init("/db/db.properties");
+    }
 }

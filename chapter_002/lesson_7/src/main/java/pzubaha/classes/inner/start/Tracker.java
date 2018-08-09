@@ -1,11 +1,11 @@
 package pzubaha.classes.inner.start;
 
-
+import pzubaha.classes.inner.models.Category;
 import pzubaha.classes.inner.models.Item;
+import pzubaha.classes.inner.models.User;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
+
 /**
  * Chapter 2. OOP.
  * Lesson 7. Exception.
@@ -22,17 +22,39 @@ public class Tracker {
 	 * List of items.
 	 */
 	private ArrayList<Item> items = new ArrayList<>(100);
-
 	/**
 	 * additional field for generating id.
 	 */
 	private static final Random RN = new Random();
 	/**
+	 * Current user.
+	 */
+	private User curUser;
+
+	/**
+	 * Getter for current user.
+	 * @return current user instance.
+	 */
+	public User getCurUser() {
+		return curUser;
+	}
+
+	/**
+	 * Setter for current user.
+	 * @param curUser current user instance.
+	 */
+	public void setCurUser(User curUser) {
+		this.curUser = curUser;
+	}
+
+	public Tracker() {
+	}
+	/**
 	 * method for add new item example.
 	 * @param item - item.
 	 */
 	public void add(Item item) {
-		item.setId(this.generateId());
+		item.setId(Integer.parseInt(this.generateId()));
 		this.items.add(item);
 	}
 	/**
@@ -40,19 +62,16 @@ public class Tracker {
 	 * @param id - id of item that need to find.
 	 * @return the item with unique id or null.
 	 */
-	public Item findById(String id) {
+	public Item findById(int id) {
 		Item result = null;
-		if (id != null) {
-            for (Item item : this.items) {
-                if (item != null && id.equals(item.getId())) {
-                    result = item;
-                    break;
-                }
-            }
-        }
+		for (Item item : this.items) {
+			if (item != null && id == item.getId()) {
+				result = item;
+				break;
+			}
+		}
 		return result;
 	}
-
 	/**
 	 * method for generate id.
 	 * @return the id.
@@ -60,7 +79,6 @@ public class Tracker {
 	private String generateId() {
 		return String.valueOf(System.currentTimeMillis() + RN.nextInt(100));
 	}
-
 	/**
 	 * method for get all items.
 	 * @return array of items.
@@ -70,7 +88,6 @@ public class Tracker {
         result.addAll(items);
 		return result;
 	}
-
 	/**
 	 * method for update item.
 	 * @param item - item which need to update.
@@ -78,7 +95,7 @@ public class Tracker {
 	public void editItem(Item item) {
 		if (item != null) {
 			for (int index = 0; index != items.size(); index++) {
-				if (this.items.get(index).getId().equals(item.getId())) {
+				if (this.items.get(index).getId() == item.getId()) {
                     for (String comment : this.items.get(index).getComments()) {
                         item.addComment(comment);
                     }
@@ -88,7 +105,6 @@ public class Tracker {
 			}
 		}
 	}
-
 	/**
 	 * method for delete item.
 	 * @param item - item which need to delete.
@@ -98,7 +114,6 @@ public class Tracker {
 			this.items.remove(item);
 		}
 	}
-
 	/**
 	 * method for searching item by name.
 	 * @param name - name of needed item.
@@ -115,11 +130,17 @@ public class Tracker {
 		}
 		return result;
 	}
-
     /**
      * Exit method.
      */
 	public void exit() {
-	    System.exit(0);
+		System.exit(0);
     }
+
+	public User getUserByLoginAndPass(String login, String pass) {
+		return null;
+	}
+	public List<Category> getCategories() {
+		return new ArrayList<>();
+	}
 }

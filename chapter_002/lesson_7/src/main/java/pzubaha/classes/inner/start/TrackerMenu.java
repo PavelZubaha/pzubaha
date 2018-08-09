@@ -1,12 +1,10 @@
 package pzubaha.classes.inner.start;
 
-
+import pzubaha.classes.inner.models.Category;
 import pzubaha.classes.inner.models.Item;
-import pzubaha.classes.inner.models.Task;
+import pzubaha.classes.inner.templates.BaseAction;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
+import java.util.*;
 
 /**
  * Chapter 2. OOP.
@@ -29,7 +27,7 @@ public class TrackerMenu {
 	 */
 	private Tracker tracker;
 	/**
-	 * Array contains different user selections.
+	 * Array contains different user select ions.
 	 */
 	private List<UserAction> actions = new ArrayList<>();
 	/**
@@ -47,15 +45,19 @@ public class TrackerMenu {
 	 */
 	public void fillActions() {
 		actions.addAll(Arrays.asList(
-		        new AddItem(),
-                new TrackerMenu.ShowAll(),
-                new EditItem(),
-                new AddComments(),
-                new ShowComments(),
-                new DelItem(),
-                new TrackerMenu.FindItemById(),
-                new FindItemByName())
-        );
+				new AddItem("Add new item", 0),
+				new TrackerMenu.ShowAll("Show all items", 1),
+				new EditItem("Edit Item", 2),
+				new AddComments("Add comment to Item", 3),
+				new ShowComments("Show comments", 4),
+				new DelItem("Delete item", 5),
+				new TrackerMenu.FindItemById("Find item by the Id", 6),
+				new FindItemByName("Find item by the name", 7),
+				new DelComments("Delete comments", 8)
+				));
+	}
+	public void delAction(UserAction userAction) {
+		actions.remove(userAction);
 	}
     /**
      * Get action range.
@@ -64,7 +66,7 @@ public class TrackerMenu {
 	public int[] getActionRange() {
 	    int[] result = new int[this.actions.size()];
 	    for (int index = 0; index < actions.size(); index++) {
-            result[index] = index;
+            result[index] = actions.get(index).key();
         }
         return result;
     }
@@ -79,6 +81,10 @@ public class TrackerMenu {
 	 * Showing menu.
 	 */
 	public void show() {
+		if (tracker.getCurUser() != null) {
+			System.out.printf("Hello, %s%n", tracker.getCurUser().getUserName());
+		}
+		actions.sort(Comparator.comparingInt(UserAction::key));
 		for (int i = 0; i < actions.size(); i++) {
 			if (actions.get(i) != null) {
 				System.out.println(actions.get(i).info());
@@ -91,7 +97,12 @@ public class TrackerMenu {
 	 * @param key - index of action.
 	 */
 	public void select(int key) {
-		this.actions.get(key).execute(this.input, this.tracker);
+		for (int i = 0; i != actions.size(); i++) {
+			if (actions.get(i).key() == key) {
+				actions.get(i).execute(input, tracker);
+				break;
+			}
+		}
 	}
 
 	/**
@@ -105,13 +116,15 @@ public class TrackerMenu {
 	 * @since 25.06.17
 	 * @version 2
 	 */
-	private class AddItem implements UserAction {
+	private class AddItem extends BaseAction {
 		/**
-		 * Special key for each action.
-		 * @return user action key.
+		 * Constructor for action.
+		 *
+		 * @param name - action name.
+		 * @param key  - action string.
 		 */
-		public int key() {
-			return 0;
+		public AddItem(String name, int key) {
+			super(name, key);
 		}
 
 		/**
@@ -122,16 +135,22 @@ public class TrackerMenu {
 		public void execute(Input input, Tracker tracker) {
 			String name = input.ask("Please enter the task name: ");
 			String desc = input.ask("Please enter the task description: ");
-			tracker.add(new Task(name, desc));
+			int cat = askCategory();
+			tracker.add(new Item(name, desc, tracker.getCurUser().getUserId(), cat));
 			input.ask("Click Enter to continue: ");
 		}
-
-		/**
-		 * String information about menu item.
-		 * @return - info about menu item.
-		 */
-		public String info() {
-			return String.format("%d%-4s%s", this.key(), ".", "Add new item");
+		private int askCategory() {
+			List<Category> categories = tracker.getCategories();
+			int[] range = new int[categories.size()];
+			StringBuilder sb = new StringBuilder(String.format("Chose category from list%n"));
+			Category cat = null;
+			for (int i = 0; i != range.length; i++) {
+				cat = categories.get(i);
+				sb.append(String.format("%d. %s%n", i, cat.getName()));
+				range[i] = i;
+			}
+			cat = categories.get(input.ask(sb.toString(), range));
+			return cat.getCatId();
 		}
 	}
 	/**
@@ -145,14 +164,16 @@ public class TrackerMenu {
 	 * @since 25.06.17
 	 * @version 2
 	 */
-	private static class ShowAll implements UserAction {
+	private static class ShowAll extends BaseAction {
 
 		/**
-		 * Special key for each action.
-		 * @return user action key.
+		 * Constructor for action.
+		 *
+		 * @param name - action name.
+		 * @param key  - action string.
 		 */
-		public int key() {
-			return 1;
+		public ShowAll(String name, int key) {
+			super(name, key);
 		}
 
 		/**
@@ -162,19 +183,12 @@ public class TrackerMenu {
 		 */
 		public void execute(Input input, Tracker tracker) {
 			StringBuilder stringBuilder = new StringBuilder();
-			stringBuilder.append(String.format("The list of found Items: %n%-5s%-10s%-16s%-12s", "№", "Name", "Description", "Id"));
+			stringBuilder.append(String.format("The list of found Items: %n%-10s%-15s%-20s%-16s", "№", "Name", "Description", "Id"));
 			int index = 1;
 			for (Item item : tracker.getAll()) {
-				stringBuilder.append(String.format("%n%d%-4s %-10s %-16s %-12s", index++, ".", item.getName(), item.getDescription(), item.getId()));
+				stringBuilder.append(String.format("%n%d%-6s %-14s %-18s %-14s", index++, ".", item.getName(), item.getDescription(), item.getId()));
 			}
             input.ask(String.format("%s%n%s", stringBuilder.toString(), "Click Enter to continue: "));
-		}
-		/**
-		 * String information about menu item.
-		 * @return - info about menu item.
-		 */
-		public String info() {
-			return String.format("%d%-4s%s", this.key(), ".", "Show all items");
 		}
 	}
 	/**
@@ -188,37 +202,30 @@ public class TrackerMenu {
 	 * @since 25.06.17
 	 * @version 2
 	 */
-	private static class FindItemById implements UserAction {
+	private static class FindItemById extends BaseAction {
 
 		/**
-		 * Special key for each action.
-		 * @return user action key.
+		 * Constructor for action.
+		 *
+		 * @param name - action name.
+		 * @param key  - action string.
 		 */
-		public int key() {
-			return 6;
+		public FindItemById(String name, int key) {
+			super(name, key);
 		}
-
 		/**
 		 * action for each menu item.
 		 * @param input - reference to input instance.
 		 * @param tracker - reference to tracker instance.
 		 */
 		public void execute(Input input, Tracker tracker) {
-			String iD = input.ask("Enter item Id: ");
-			Item foundItem = tracker.findById(iD);
+			Item foundItem = getItem(input, tracker);
 			if (foundItem != null) {
 				input.ask(String.format("Name: %s%nDescription: %s%nItem Id: %s%n Comments: %n%s", foundItem.getName(), foundItem.getDescription(), foundItem.getId(), foundItem.showItemComments()));
 			} else {
 				input.ask("There is no item with the Id");
 			}
 		}
-		/**
-		 * String information about menu item.
-		 * @return - info about menu item.
-		 */
-		public String info() {
-			return String.format("%d%-4s%s", this.key(), ".", "Find item by the Id");
-		}
 	}
 }
 /**
@@ -232,72 +239,70 @@ public class TrackerMenu {
  * @since 25.06.17
  * @version 2
  */
-class EditItem implements UserAction {
+class EditItem extends BaseAction {
 
 	/**
-	 * Special key for each action.
-	 * @return user action key.
+	 * Constructor for action.
+	 *
+	 * @param name - action name.
+	 * @param key  - action string.
 	 */
-	public int key() {
-		return 2;
+	public EditItem(String name, int key) {
+		super(name, key);
 	}
 
 	/**
 	 * action for each menu item.
-	 * @param input - reference to input instance.
+	 *
+	 * @param input   - reference to input instance.
 	 * @param tracker - reference to tracker instance.
 	 */
 	public void execute(Input input, Tracker tracker) {
-		String iD = input.ask("Enter item Id: ");
-		Item foundItem = tracker.findById(iD);
+		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
 			String name = input.ask("Enter new name of item: ");
 			String desc = input.ask("Enter new description: ");
-			Item newItem = new Item(name, desc);
-			newItem.setId(iD);
+			Item newItem = new Item(name, desc, tracker.getCurUser().getUserId(), foundItem.getCatId());
+			newItem.setId(foundItem.getId());
 			tracker.editItem(newItem);
 			input.ask("Item edited");
 		} else {
 			input.ask("There is no item with the Id");
 		}
 	}
-	/**
-	 * String information about menu item.
-	 * @return - info about menu item.
-	 */
-	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Edit Item");
-	}
 }
+
 /**
  * Chapter 2. OOP.
  * Lesson 4. Polymorphism.
- *
+ * <p>
  * Class managing tracker through command line.
  * Class contains solution of task 787.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
- * @since 25.06.17
  * @version 2
+ * @since 25.06.17
  */
-class AddComments implements UserAction {
+class AddComments extends BaseAction  {
 
 	/**
-	 * Special key for each action.
-	 * @return user action key.
+	 * Constructor for action.
+	 *
+	 * @param name - action name.
+	 * @param key  - action string.
 	 */
-	public int key() {
-		return 3;
+	public AddComments(String name, int key) {
+		super(name, key);
 	}
 
 	/**
 	 * action for each menu item.
-	 * @param input - reference to input instance.
+	 *
+	 * @param input   - reference to input instance.
 	 * @param tracker - reference to tracker instance.
 	 */
 	public void execute(Input input, Tracker tracker) {
-		String iD = input.ask("Enter item Id: ");
-		Item foundItem = tracker.findById(iD);
+		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
 			String comment = input.ask("Enter comment to add: ");
 			foundItem.addComment(comment);
@@ -306,91 +311,83 @@ class AddComments implements UserAction {
 			input.ask("There is no item with the Id");
 		}
 	}
-	/**
-	 * String information about menu item.
-	 * @return - info about menu item.
-	 */
-	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Add comment to Item");
-	}
 }
+
 /**
  * Chapter 2. OOP.
  * Lesson 4. Polymorphism.
- *
+ * <p>
  * Class managing tracker through command line.
  * Class contains solution of task 787.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
- * @since 25.06.17
  * @version 2
+ * @since 25.06.17
  */
-class ShowComments implements UserAction {
+class ShowComments extends BaseAction {
 
 	/**
-	 * Special key for each action.
-	 * @return user action key.
+	 * Constructor for action.
+	 *
+	 * @param name - action name.
+	 * @param key  - action string.
 	 */
-	public int key() {
-		return 4;
+	public ShowComments(String name, int key) {
+		super(name, key);
 	}
 
 	/**
 	 * action for each menu item.
-	 * @param input - reference to input instance.
+	 *
+	 * @param input   - reference to input instance.
 	 * @param tracker - reference to tracker instance.
 	 */
 	public void execute(Input input, Tracker tracker) {
-		String iD = input.ask("Enter item Id: ");
-		Item foundItem = tracker.findById(iD);
+		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
-		    String stringComments = foundItem.showItemComments();
-		    if (stringComments.length() > 0) {
-                input.ask(stringComments);
-            } else {
-		        input.ask("This item has no comments.");
-            }
+			String stringComments = foundItem.showItemComments();
+			if (stringComments.length() > 0) {
+				input.ask(stringComments);
+			} else {
+				input.ask("This item has no comments.");
+			}
 		} else {
 			input.ask("There is no item with the Id");
 		}
 	}
-	/**
-	 * String information about menu item.
-	 * @return - info about menu item.
-	 */
-	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Show comments");
-	}
 }
+
 /**
  * Chapter 2. OOP.
  * Lesson 7. Exceptions.
- *
+ * <p>
  * Class managing tracker through command line.
  * Class contains solution of task 787.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
- * @since 25.06.17
  * @version 2
+ * @since 25.06.17
  */
-class DelItem implements UserAction {
+class DelItem extends BaseAction {
 
 	/**
-	 * Special key for each action.
-	 * @return user action key.
+	 * Constructor for action.
+	 *
+	 * @param name - action name.
+	 * @param key  - action string.
 	 */
-	public int key() {
-		return 5;
+	public DelItem(String name, int key) {
+		super(name, key);
 	}
 
 	/**
 	 * action for each menu item.
-	 * @param input - reference to input instance.
+	 *
+	 * @param input   - reference to input instance.
 	 * @param tracker - reference to tracker instance.
 	 */
 	public void execute(Input input, Tracker tracker) {
-		String iD = input.ask("Enter item Id: ");
-		Item foundItem = tracker.findById(iD);
+		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
 			tracker.delete(foundItem);
 			input.ask("Item deleted");
@@ -398,38 +395,35 @@ class DelItem implements UserAction {
 			input.ask("There is no item with the Id");
 		}
 	}
-	/**
-	 * String information about menu item.
-	 * @return - info about menu item.
-	 */
-	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Delete item");
-	}
 }
+
 /**
  * Chapter 2. OOP.
  * Lesson 7. Exceptions.
- *
+ * <p>
  * Class managing tracker through command line.
  * Class contains solution of task 787.
  *
  * @author Pavel Zubaha (mailto:Apximar@gmail.com)
- * @since 25.06.17
  * @version 2
+ * @since 25.06.17
  */
-class FindItemByName implements UserAction {
+class FindItemByName extends BaseAction {
 
 	/**
-	 * Special key for each action.
-	 * @return user action key.
+	 * Constructor for action.
+	 *
+	 * @param name - action name.
+	 * @param key  - action string.
 	 */
-	public int key() {
-		return 7;
+	public FindItemByName(String name, int key) {
+		super(name, key);
 	}
 
 	/**
 	 * action for each menu item.
-	 * @param input - reference to input instance.
+	 *
+	 * @param input   - reference to input instance.
 	 * @param tracker - reference to tracker instance.
 	 */
 	public void execute(Input input, Tracker tracker) {
@@ -447,11 +441,30 @@ class FindItemByName implements UserAction {
 			input.ask(String.format("There is no items with name \"%s\"%n", name));
 		}
 	}
-	/**
-	 * String information about menu item.
-	 * @return - info about menu item.
-	 */
-	public String info() {
-		return String.format("%d%-4s%s", this.key(), ".", "Find item by the name");
+}
+
+class DelComments extends BaseAction {
+	public DelComments(String name, int key) {
+		super(name, key);
+	}
+
+	@Override
+	public void execute(Input input, Tracker tracker) {
+		Item foundItem = getItem(input, tracker);
+		if (foundItem != null) {
+			List<String> comments = foundItem.getComments();
+			if (comments.size() != 0) {
+				int[] commentsRange = new int[comments.size()];
+				for (int i = 0; i < comments.size(); i++) {
+					commentsRange[i] = i + 1;
+				}
+				int toDeleteCommentNum = input.ask(String.format("%s%n%s", foundItem.showItemComments(), "Enter comment number to delete: "), commentsRange);
+				foundItem.delComment(toDeleteCommentNum);
+				input.ask("Comment deleted");
+			}
+
+		} else {
+			input.ask("There is no item with the Id");
+		}
 	}
 }

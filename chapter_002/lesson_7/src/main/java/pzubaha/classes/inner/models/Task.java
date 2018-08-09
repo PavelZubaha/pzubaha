@@ -16,7 +16,7 @@ public class Task extends Item {
 	 * @param name - name.
 	 * @param desc - description.
 	 */
-	public Task(String name, String desc) {
-		super(name, desc);
+	public Task(String name, String desc, int userId, int cat) {
+		super(name, desc, userId, cat);
 	}
 }

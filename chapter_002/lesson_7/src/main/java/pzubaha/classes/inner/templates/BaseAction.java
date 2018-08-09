@@ -1,5 +1,7 @@
 package pzubaha.classes.inner.templates;
 
+import org.apache.commons.lang3.math.NumberUtils;
+import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.start.Input;
 import pzubaha.classes.inner.start.Tracker;
 import pzubaha.classes.inner.start.UserAction;
@@ -9,6 +11,7 @@ import pzubaha.classes.inner.start.UserAction;
  * Solution of task 790. Abstract and anonymous action.
  */
 public abstract class BaseAction implements UserAction {
+
     /**
      * action key.
      */
@@ -49,5 +52,8 @@ public abstract class BaseAction implements UserAction {
      */
     public int key() {
         return key;
+    }
+    protected Item getItem(Input input, Tracker tracker) {
+        return tracker.findById(NumberUtils.toInt(input.ask("Enter correct item Id: "), 0));
     }
 }

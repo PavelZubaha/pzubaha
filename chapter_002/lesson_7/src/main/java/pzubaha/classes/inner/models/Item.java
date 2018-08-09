@@ -1,5 +1,7 @@
 package pzubaha.classes.inner.models;
+import pzubaha.classes.inner.start.TrackerDB;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -19,7 +21,7 @@ public class Item {
 	/**
 	 * Unique field for each example of Item.
 	*/
-	private String id;
+	private int id;
 	/**
 	 * name of each example.
 	 */
@@ -31,10 +33,21 @@ public class Item {
 	/**
 	 * name of each example.
 	 */
-	private long create;
-
+	private Timestamp create;
 	/**
-	 * comments.
+	 * Id of user.
+	 */
+	private int userId;
+	/**
+	 * Status id.
+	 */
+	private int statId;
+	/**
+	 * Category_id.
+	 */
+	private int catId;
+	/**
+	 * Comments.
 	 */
 	private List<String> comments = new ArrayList<>();
 
@@ -48,11 +61,25 @@ public class Item {
 	 * @param name - name.
 	 * @param  description - description.
 	 */
-	public Item(String name, String description) {
+	public Item(String name, String description, int userId, int catId) {
 		this.name = name;
 		this.description = description;
-		this.create = System.currentTimeMillis();
+		this.create = TrackerDB.getCurrentTimeStamp();
+		this.userId = userId;
+		this.catId = catId;
+		this.setStatId(1);
 	}
+
+	public Item(int id, String name, String description, Timestamp create, int userId, int statId, int catId) {
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.create = create;
+		this.userId = userId;
+		this.statId = statId;
+		this.catId = catId;
+	}
+
 	/**
 	 * method for getting name of item example.
 	 * @return name.
@@ -71,21 +98,21 @@ public class Item {
 	 * method for getting create of item example.
 	 * @return create.
 	 */
-	public long getCreate() {
+	public Timestamp getCreate() {
 		return this.create;
 	}
 	/**
 	 * method for getting id of item example.
 	 * @return id.
 	 */
-	public String getId() {
+	public int getId() {
 		return this.id;
 	}
 	/**
 	 * method for setting id of item example.
 	 * @param id - id needed to set.
 	 */
-	public void setId(String id) {
+	public void setId(int id) {
 		this.id = id;
 	}
 
@@ -133,4 +160,43 @@ public class Item {
             comments.remove(commentNumber - 1);
         }
     }
+
+	public int getStatId() {
+		return statId;
+	}
+
+	public int getUserId() {
+		return userId;
+	}
+
+	public void setUserId(int userId) {
+		this.userId = userId;
+	}
+
+	public void setStatId(int statId) {
+		this.statId = statId;
+	}
+
+	public int getCatId() {
+		return catId;
+	}
+
+	public void setCatId(int catId) {
+		this.catId = catId;
+	}
+
+	@Override
+	public String toString() {
+		final StringBuilder sb = new StringBuilder("Item{");
+		sb.append("id=").append(id);
+		sb.append(", name='").append(name).append('\'');
+		sb.append(", description='").append(description).append('\'');
+		sb.append(", create=").append(create);
+		sb.append(", user_id=").append(userId);
+		sb.append(", stat_id=").append(statId);
+		sb.append(", cat_id=").append(catId);
+		sb.append(", comments=").append(comments);
+		sb.append('}');
+		return sb.toString();
+	}
 }
