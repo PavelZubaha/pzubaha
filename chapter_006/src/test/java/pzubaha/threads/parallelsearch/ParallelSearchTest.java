@@ -3,6 +3,7 @@ package pzubaha.threads.parallelsearch;
 import org.junit.Assert;
 import org.junit.Test;
 
+import java.io.File;
 import java.util.Arrays;
 import java.util.List;
 
@@ -21,7 +22,7 @@ public class ParallelSearchTest {
     @Test
     public void whenTryToFindTextInJavaFileThenPathFinded() {
         String expected = "ParallelSearch";
-        String root = "src\\test\\java";
+        String root = "src" + File.separator + "test" + File.separator + "java";
         String text = "Text to find";
         List<String> extension = Arrays.asList("java");
         ParallelSearch parallelSearch = new ParallelSearch(root, text, extension);

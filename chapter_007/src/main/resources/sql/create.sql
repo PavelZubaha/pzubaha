@@ -2,7 +2,7 @@
 CREATE DATABASE item_tracker;
 
 -- create tables structure
-CREATE TABLE rules (
+CREATE TABLE rules  (
   rule_id SERIAL PRIMARY KEY,
   rule_desc TEXT NOT NULL
 );

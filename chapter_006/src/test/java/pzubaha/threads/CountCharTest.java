@@ -2,6 +2,7 @@ package pzubaha.threads;
 
 import org.junit.Test;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 
@@ -22,13 +23,16 @@ import static org.junit.Assert.assertThat;
 public class CountCharTest {
     @Test
     public void whenCountChars() throws InterruptedException {
+        String path = "src" + File.separator + "main"
+                + File.separator + "resources"
+                + File.separator + "War and peace.txt";
         long start = System.currentTimeMillis();
         System.out.println("Program starting...");
         Thread countThread;
         Thread timer;
         Container<Integer> counterHolder = new Container<>(0);
         try {
-            countThread = new CountChar(new FileReader("src\\main\\resources\\War and peace.txt"), counterHolder);
+            countThread = new CountChar(new FileReader(path), counterHolder);
             timer = new Time(countThread, 10);
             timer.start();
             timer.join();

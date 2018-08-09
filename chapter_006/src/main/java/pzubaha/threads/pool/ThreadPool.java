@@ -51,7 +51,7 @@ public class ThreadPool {
                 public void run() {
 //                    System.out.println(getName() + " start");
                     Work work;
-                    while (!isInterrupted() || !works.isEmpty()) {
+                    while (!isShutDown.get() || !works.isEmpty()) {
                         try {
                             work = works.poll();
                             if (work != null) {
