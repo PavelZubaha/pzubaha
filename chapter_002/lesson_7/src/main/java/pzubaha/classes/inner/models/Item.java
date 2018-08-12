@@ -49,7 +49,7 @@ public class Item {
 	/**
 	 * Comments.
 	 */
-	private List<String> comments = new ArrayList<>();
+	private List<Comment> comments = new ArrayList<>();
 
 	/**
 	 * default constructor for Item.
@@ -120,20 +120,21 @@ public class Item {
 	 * method for adding comments.
 	 * @param comment - comment text.
 	 */
-	public void addComment(String comment) {
+	public void addComment(Comment comment) {
 		this.comments.add(comment);
+		comment.setCommentId(comments.size());
 	}
 	/**
 	 * method for showing comments.
 	 * @return comments as String instance.
 	 */
 	public String showItemComments() {
-        Iterator<String> it = comments.listIterator();
+        Iterator<Comment> it = comments.listIterator();
 		StringBuilder builder = new StringBuilder("");
 		if (comments.size() != 0) {
 			String separator = String.format("%n----------------------------------%n");
 			for (int i = 0; it.hasNext(); i++) {
-				builder.append(String.format("%4d%-4s%s%s", i + 1, ".", it.next(), separator));
+				builder.append(String.format("%4d%-4s%s%s", i + 1, ".", it.next().toString(), separator));
 			}
 		}
 		return builder.toString();
@@ -143,8 +144,8 @@ public class Item {
 	 * method for getting comments.
 	 * @return comments as String[] instance. When there is no comments then returned array has 0 length.
 	 */
-	public List<String> getComments() {
-		List<String> result = new ArrayList<>();
+	public List<Comment> getComments() {
+		List<Comment> result = new ArrayList<>();
 		if (comments.size() != 0) {
 			result.addAll(comments);
 		}
@@ -153,12 +154,15 @@ public class Item {
 
     /**
      * method for deleting comment.
-     * @param commentNumber - number of deleting comment.
+     * @param commentId - id of deleting comment.
      */
-    public void delComment(int commentNumber) {
-        if (commentNumber  <= comments.size() && commentNumber > 0) {
-            comments.remove(commentNumber - 1);
-        }
+    public void delComment(int commentId) {
+        for (Comment c : comments) {
+        	if (c.getCommentId() == commentId) {
+        		comments.remove(c);
+        		break;
+			}
+		}
     }
 
 	public int getStatId() {

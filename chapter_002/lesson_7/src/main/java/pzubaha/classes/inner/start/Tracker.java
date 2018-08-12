@@ -1,14 +1,17 @@
 package pzubaha.classes.inner.start;
 
 import pzubaha.classes.inner.models.Category;
+import pzubaha.classes.inner.models.Comment;
 import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.models.User;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 /**
  * Chapter 2. OOP.
- * Lesson 7. Exception.
+ * Lesson 7. Exception.1
  *
  * Class Tracker implements issue/request tracker functions.
  * Class contains solution of task 789.
@@ -96,7 +99,7 @@ public class Tracker {
 		if (item != null) {
 			for (int index = 0; index != items.size(); index++) {
 				if (this.items.get(index).getId() == item.getId()) {
-                    for (String comment : this.items.get(index).getComments()) {
+                    for (Comment comment : this.items.get(index).getComments()) {
                         item.addComment(comment);
                     }
                     this.items.set(index, item);
@@ -142,5 +145,17 @@ public class Tracker {
 	}
 	public List<Category> getCategories() {
 		return new ArrayList<>();
+	}
+
+	public void addComment(Comment comment) {
+		findById(comment.getItemId()).addComment(comment);
+	}
+
+	public List<Comment> getComments(Item item) {
+		return new ArrayList<>(item.getComments());
+	}
+
+	public void delComment(Comment comment) {
+		findById(comment.getItemId()).delComment(comment.getCommentId());
 	}
 }

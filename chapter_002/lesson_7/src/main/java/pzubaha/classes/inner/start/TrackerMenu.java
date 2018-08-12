@@ -1,6 +1,7 @@
 package pzubaha.classes.inner.start;
 
 import pzubaha.classes.inner.models.Category;
+import pzubaha.classes.inner.models.Comment;
 import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.templates.BaseAction;
 
@@ -304,8 +305,9 @@ class AddComments extends BaseAction  {
 	public void execute(Input input, Tracker tracker) {
 		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
-			String comment = input.ask("Enter comment to add: ");
-			foundItem.addComment(comment);
+			tracker.addComment(new Comment(0,
+					foundItem.getId(),
+					input.ask("Enter comment to add: ")));
 			input.ask("Comment added");
 		} else {
 			input.ask("There is no item with the Id");
@@ -326,6 +328,18 @@ class AddComments extends BaseAction  {
  */
 class ShowComments extends BaseAction {
 
+	static String showComments(List<Comment> comments) {
+		Iterator<Comment> it = comments.iterator();
+		StringBuilder builder = new StringBuilder("");
+		if (comments.size() != 0) {
+			String separator = String.format("%n----------------------------------%n");
+			for (int i = 0; it.hasNext(); i++) {
+				builder.append(String.format("%4d%-4s%s%s", i + 1, ".", it.next().toString(), separator));
+			}
+		}
+		return builder.toString();
+	}
+
 	/**
 	 * Constructor for action.
 	 *
@@ -345,7 +359,8 @@ class ShowComments extends BaseAction {
 	public void execute(Input input, Tracker tracker) {
 		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
-			String stringComments = foundItem.showItemComments();
+			List<Comment> comments = tracker.getComments(foundItem);
+			String stringComments = showComments(comments);
 			if (stringComments.length() > 0) {
 				input.ask(stringComments);
 			} else {
@@ -452,14 +467,14 @@ class DelComments extends BaseAction {
 	public void execute(Input input, Tracker tracker) {
 		Item foundItem = getItem(input, tracker);
 		if (foundItem != null) {
-			List<String> comments = foundItem.getComments();
+			List<Comment> comments = tracker.getComments(foundItem);
 			if (comments.size() != 0) {
 				int[] commentsRange = new int[comments.size()];
 				for (int i = 0; i < comments.size(); i++) {
 					commentsRange[i] = i + 1;
 				}
-				int toDeleteCommentNum = input.ask(String.format("%s%n%s", foundItem.showItemComments(), "Enter comment number to delete: "), commentsRange);
-				foundItem.delComment(toDeleteCommentNum);
+				int toDeleteCommentNum = input.ask(String.format("%s%n%s", ShowComments.showComments(tracker.getComments(foundItem)), "Enter comment number to delete: "), commentsRange);
+				tracker.delComment(comments.get(toDeleteCommentNum - 1));
 				input.ask("Comment deleted");
 			}
 

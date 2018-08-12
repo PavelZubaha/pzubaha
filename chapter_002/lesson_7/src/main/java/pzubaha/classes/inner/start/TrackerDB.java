@@ -1,5 +1,6 @@
 package pzubaha.classes.inner.start;
 import pzubaha.classes.inner.models.Category;
+import pzubaha.classes.inner.models.Comment;
 import pzubaha.classes.inner.models.Item;
 import pzubaha.classes.inner.models.User;
 
@@ -241,6 +242,54 @@ public class TrackerDB extends Tracker implements AutoCloseable {
             ps.setInt(4, item.getStatId());
             ps.setInt(5, item.getCatId());
             ps.setInt(6, item.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public void addComment(Comment comment) {
+        String sql = "INSERT INTO comments(comment_body, item_id) VALUES (?, ?)";
+        try (PreparedStatement ps = connection.prepareStatement(sql, PreparedStatement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, comment.getCommentBody());
+            ps.setInt(2, comment.getItemId());
+            ps.executeUpdate();
+            ResultSet rs = ps.getGeneratedKeys();
+            while (rs.next()) {
+                comment.setCommentId(rs.getInt("comment_id"));
+                System.out.println("Comment added with id = " + comment.getCommentId());
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    @Override
+    public List<Comment> getComments(Item item) {
+        List<Comment> results = new ArrayList<>();
+        String sql = "SELECT * FROM comments WHERE item_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, item.getId());
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                results.add(new Comment(
+                        rs.getInt("item_id"),
+                        rs.getInt("comment_id"),
+                        rs.getString("comment_body"))
+                );
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return results;
+    }
+
+    @Override
+    public void delComment(Comment comment) {
+        String sql = "DELETE FROM comments WHERE comment_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, comment.getItemId());
             ps.execute();
         } catch (SQLException e) {
             e.printStackTrace();
