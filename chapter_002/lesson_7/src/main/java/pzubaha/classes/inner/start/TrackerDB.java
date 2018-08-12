@@ -229,4 +229,21 @@ public class TrackerDB extends Tracker implements AutoCloseable {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public void editItem(Item item) {
+        String sql = "UPDATE items SET item_name = ?, item_desc = ?, item_date = ?, stat_id = ?, cat_id = ? "
+                + "WHERE item_id = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, item.getName());
+            ps.setString(2, item.getDescription());
+            ps.setTimestamp(3, item.getCreate());
+            ps.setInt(4, item.getStatId());
+            ps.setInt(5, item.getCatId());
+            ps.setInt(6, item.getId());
+            ps.execute();
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 }

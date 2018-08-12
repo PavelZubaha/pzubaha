@@ -4,7 +4,6 @@ import pzubaha.classes.inner.models.User;
 import pzubaha.classes.inner.templates.BaseAction;
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.util.Properties;
 
 /**
