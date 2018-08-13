@@ -87,7 +87,7 @@ public class ParallelSearch {
                         if (!Thread.currentThread().isInterrupted()) {
                             while (files.isEmpty()) {
                                 try {
-                                    files.wait(50);
+                                    files.wait(200);
                                 } catch (InterruptedException e) {
 //                                    e.printStackTrace();
                                     System.out.println("Read thread is interrupted while wait");
@@ -128,7 +128,6 @@ public class ParallelSearch {
                 }
             }
         };
-
         search.start();
         read.start();
         search.join();
@@ -181,7 +180,7 @@ public class ParallelSearch {
      * @param args args
      */
     public static void main(String[] args) {
-        ParallelSearch parallelSearch = new ParallelSearch("", "interface", Arrays.asList("java"));
+        ParallelSearch parallelSearch = new ParallelSearch("", "main", Arrays.asList("java"));
         try {
             parallelSearch.init();
         } catch (InterruptedException e) {

@@ -21,17 +21,20 @@ public class ParallelSearchTest {
 
     @Test
     public void whenTryToFindTextInJavaFileThenPathFinded() {
-        String expected = "ParallelSearch";
-        String root = "src" + File.separator + "test" + File.separator + "java";
-        String text = "Text to find";
-        List<String> extension = Arrays.asList("java");
+        String expected = "War and peace";
+        String root = "src" + File.separator + "main"
+                + File.separator + "resources";
+        System.out.println(root);
+        String text = "www.lib.ru";
+        List<String> extension = Arrays.asList("txt");
         ParallelSearch parallelSearch = new ParallelSearch(root, text, extension);
         try {
             parallelSearch.init();
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        String result = parallelSearch.result().get(0);
-        Assert.assertTrue(result.contains(expected));
+        List<String> result = parallelSearch.result();
+        System.out.println(result);
+        Assert.assertTrue(result.get(0).contains(expected));
     }
 }
