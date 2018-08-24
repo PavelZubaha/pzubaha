@@ -137,7 +137,8 @@ public class Tracker {
      * Exit method.
      */
 	public void exit() {
-		System.exit(0);
+		System.out.println("Program will be closed");
+		throw new CloseProgramExc();
     }
 
 	public User getUserByLoginAndPass(String login, String pass) {

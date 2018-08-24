@@ -79,7 +79,6 @@ public class TrackerDB extends Tracker implements AutoCloseable {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        System.exit(0);
     }
 
     @Override
@@ -106,11 +105,6 @@ public class TrackerDB extends Tracker implements AutoCloseable {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    }
-
-    public static java.sql.Timestamp getCurrentTimeStamp() {
-        java.util.Date today = new java.util.Date();
-        return new java.sql.Timestamp(today.getTime());
     }
 
     @Override
