@@ -1,0 +1,6 @@
+CREATE TABLE IF NOT EXISTS vacancies (
+id INTEGER SERIAL PRIMARY KEY,
+header TEXT,
+content TEXT,
+upTime TIMESTAMP,
+url VARCHAR 256)
