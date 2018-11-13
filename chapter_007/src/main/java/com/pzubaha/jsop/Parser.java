@@ -5,68 +5,82 @@ import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
+import org.apache.log4j.Logger;
+import org.quartz.Job;
+import org.quartz.JobExecutionContext;
+import org.quartz.JobExecutionException;
 
 import java.io.IOException;
 import java.io.InputStream;
-import java.sql.SQLException;
 import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
 
-public class Parser {
+public class Parser implements Job {
+    private static final Logger LOGGER = Logger.getLogger(Parser.class);
     private final SimpleDateFormat format = new SimpleDateFormat("d MMM yy, HH:mm", new Locale("ru", "RU"));
+    private final String url = "http://www.sql.ru/forum/job-offers/";
+    private final String propertyPath = "/app.properties";
 
+    public void execute(JobExecutionContext var1) throws JobExecutionException {
+        LOGGER.info("Start application!");
+        parse();
+        LOGGER.info("Closing app");
+    }
 
-    public static void main(String[] args) {
-        Parser parser = new Parser();
+    public void parse() {
+        try (InputStream in = getClass().getResourceAsStream(propertyPath); UtilsDB dbUtils = new UtilsDB()) {
+            Properties props = new Properties();
+            LOGGER.debug("Try to load properties");
+            props.load(in);
+            LOGGER.debug("Try to init connection to db");
+            dbUtils.initConection(props);
+            dbUtils.addAll(getVacancies(dbUtils.getLastUpdate()));
+        } catch (Exception e) {
+            LOGGER.warn(e);
+        }
+    }
+
+    private List<Vacancy> getVacancies(Timestamp lastUpdateBefore) throws IOException {
         Document doc;
-        String url = "http://www.sql.ru/forum/job-offers/";
         String desc;
-        String date;
+        Timestamp date;
         String header;
         String href;
-        String lowercHeader;
+        int id;
+        String lowerCHeader;
         List<Vacancy> vacancies = new ArrayList<>();
-        for (int i = 1; i < 2; i++) {
-            try {
-                doc = Jsoup.connect(url + i).get();
-                Elements e = doc.getElementsByClass("postslisttopic");
-                for (Element el : e) {
-                    header = el.text();
-                    header = header.replaceAll("(?m)^[ \t]*\r?\n", "");
-                    lowercHeader = header.toLowerCase();
-                    if (lowercHeader.toLowerCase().contains("java") && !lowercHeader.contains("javascript")) {
+        boolean continueParsePages = true;
+        for (int i = 1; continueParsePages; i++) {
+            doc = Jsoup.connect(url + i).get();
+            Elements e = doc.getElementsByClass("postslisttopic");
+            for (Element el : e) {
+                header = el.text();
+                header = header.replaceAll("(?m)^[ \t]*\r?\n", "");
+                lowerCHeader = header.toLowerCase();
+                if (lowerCHeader.toLowerCase().contains("java") && !lowerCHeader.contains("javascript")) {
+                    date = getTimestamp(el.parent().child(5).text());
+                    if (date.compareTo(lastUpdateBefore) < 0) {
+                        continueParsePages = false;
+                        break;
+                    } else {
                         href = el.child(0).getElementsByTag("a").attr("href");
-                        date = el.parent().child(5).text();
-                        desc = parser.getDesc(href).replaceAll("(?m)^[ \t]*\r?\n", "");
-
+                        id = Integer.parseInt(href.substring(25, href.indexOf('/', 25)));
+                        desc = getDesc(href).replaceAll("(?m)^[ \t]*\r?\n", "");
                         vacancies.add(new Vacancy(
+                                id,
                                 header,
                                 desc,
-                                parser.getTimestamp(date),
-                                href
+                                date
                         ));
                     }
                 }
-                parser.printVacancyList(vacancies);
-                DBUtils dbUtils = new DBUtils();
-                Properties props = new Properties();
-                String propertyPath = "/db.properties";
-                try (InputStream in = parser.getClass().getResourceAsStream(propertyPath)) {
-                    props.load(in);
-                    dbUtils.initConection(props);
-                    dbUtils.addAll(vacancies);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                } catch (SQLException e1) {
-                    e1.printStackTrace();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
             }
         }
+//        printVacancyList(vacancies);
+        return vacancies;
     }
 
     private void printVacancyList(List<Vacancy> vacancies) {
@@ -79,12 +93,18 @@ public class Parser {
         });
     }
 
-    private String getDesc(String href) throws IOException {
+    private String getDesc(String href) {
         StringBuilder sb = new StringBuilder();
         String s;
-        Document document = Jsoup.connect(href).get();
+        Document document = null;
+        try {
+            LOGGER.debug("try to get vacancy list");
+            document = Jsoup.connect(href).get();
+        } catch (IOException e) {
+            LOGGER.warn(e);
+        }
         Element msgBody;
-        msgBody = document.getElementsByClass("msgBody").get(1);
+        msgBody = Objects.requireNonNull(document).getElementsByClass("msgBody").get(1);
         msgBody.children().forEach(new Consumer<Element>() {
             @Override
             public void accept(Element element) {
@@ -94,19 +114,8 @@ public class Parser {
         return sb.toString();
     }
 
-
-    public String parseFor(String url) {
-        String r = "";
-        try {
-            Document doc = Jsoup.connect(url).get();
-            doc.getElementsByClass("forumTable").first().children().first().children();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return r;
-    }
-
-    public Timestamp getTimestamp(String date) {
+    private Timestamp getTimestamp(String date) {
+        LOGGER.debug("Get timestamp from String date");
         Calendar calendar = Calendar.getInstance();
         if (date.contains("сегодня")) {
             calendar.set(Calendar.HOUR_OF_DAY, Integer.parseInt(date.substring(9, 11)));
@@ -119,7 +128,7 @@ public class Parser {
             try {
                 calendar.setTime(format.parse(date));
             } catch (ParseException e) {
-                e.printStackTrace();
+                LOGGER.warn(e);
             }
         }
         return new Timestamp(calendar.getTimeInMillis());

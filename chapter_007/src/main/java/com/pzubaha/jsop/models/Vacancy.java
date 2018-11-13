@@ -7,18 +7,17 @@ public class Vacancy {
     private String header;
     private String desc;
     private Timestamp updateTime;
-    private String url;
 
-    public Vacancy(String header, String desc, Timestamp updateTime, String url) {
+    public Vacancy(int id, String header, String desc, Timestamp updateTime) {
+        this.id = id;
         this.header = header;
         this.desc = desc;
         this.updateTime = updateTime;
-        this.url = url;
     }
 
     @Override
     public String toString() {
-        return String.format("Vacancy %n{header=%s%ndesc=%s%nupdateTime=%s%nurl=%s}", header, desc, updateTime, url);
+        return String.format("Vacancy %n{header=%s%ndesc=%s%nupdateTime=%s%nurl=%s}", header, desc, updateTime, "http://www.sql.ru/forum/" + id);
     }
 
     public int getId() {
@@ -51,13 +50,5 @@ public class Vacancy {
 
     public void setUpdateTime(Timestamp updateTime) {
         this.updateTime = updateTime;
-    }
-
-    public String getUrl() {
-        return url;
-    }
-
-    public void setUrl(String url) {
-        this.url = url;
     }
 }
