@@ -16,12 +16,28 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Properties;
 
-
+/**
+ * job4j.ru
+ * Chapter_007. JDBC.
+ * <p>
+ * Contains solution of task 1731.
+ * Parser vacancies of site sql.ru.
+ * Class provide methods for working with JDBC.
+ * Created 13.11.2018.
+ * @author Pavel Zubaha (mailto:Apximar@gmail.com)
+ * @version 1
+ */
 public class UtilsDB implements AutoCloseable {
 
     private static final Logger LOG = Logger.getLogger(UtilsDB.class);
     private Connection con;
-
+    /**
+     * Init connection to db using given properties.
+     * @param p specified properties(jdbc driver, url, username, password).
+     * @throws SQLException when checkTable throw it.
+     * @throws IOException when occur something with I/O channels.
+     * @throws URISyntaxException when URI is wrong.
+     */
     public void initConection(Properties p) throws SQLException, IOException, URISyntaxException {
         Connection c = null;
         try {
@@ -37,7 +53,12 @@ public class UtilsDB implements AutoCloseable {
         con = c;
         checkTable();
     }
-
+    /**
+     * Checks table.
+     * @throws URISyntaxException when URI is wrong.
+     * @throws IOException when occur something with I/O channels.
+     * @throws SQLException give about problems with db query.
+     */
     private void checkTable() throws URISyntaxException, IOException, SQLException {
         LOG.debug("checking table");
         URL startSqlFileURL = getClass().getResource("/sql/checkDB.sql");
@@ -46,7 +67,10 @@ public class UtilsDB implements AutoCloseable {
             stmnt.executeUpdate(sql);
         }
     }
-
+    /**
+     * For adding list vacansies to db.
+     * @param vacancies list of vacancies.
+     */
     public void addAll(List<Vacancy> vacancies) {
         LOG.debug("try to add all vacancy from list");
         String query = "INSERT INTO vacancies(id, header, content, uptime) VALUES(?, ?, ?, ?) ON CONFLICT(id) DO NOTHING";
@@ -79,7 +103,10 @@ public class UtilsDB implements AutoCloseable {
     public List<Vacancy> getAll() {
         return new ArrayList<>();
     }
-
+    /**
+     * Getting last update from db.
+     * @return timestamp of last update or special date.
+     */
     public Timestamp getLastUpdate() {
         String query = "SELECT MAX(uptime) FROM vacancies;";
         Timestamp ts = Timestamp.valueOf(LocalDateTime.now().minusMonths(1));
@@ -96,7 +123,10 @@ public class UtilsDB implements AutoCloseable {
         }
         return ts;
     }
-
+    /**
+     * Closing connection.
+     * @throws Exception when it happens while closing.
+     */
     @Override
     public void close() throws Exception {
         LOG.debug("closing connection");

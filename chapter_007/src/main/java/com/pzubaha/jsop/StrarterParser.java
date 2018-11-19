@@ -7,6 +7,9 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.util.Properties;
 
+/**
+ * Class for starting Parser with cron expressions in app.properties file.
+ */
 public class StrarterParser {
     public static void main(String[] args) throws SchedulerException, IOException {
         Properties props = new Properties();

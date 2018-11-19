@@ -17,19 +17,38 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.function.Consumer;
-
+/**
+ * job4j.ru
+ * Chapter_007. JDBC.
+ * <p>
+ * Contains solution of task 1731.
+ * Parser vacancies of site sql.ru.
+ * Class provide methods for working with JDBC.
+ * Created 13.11.2018.
+ * @author Pavel Zubaha (mailto:Apximar@gmail.com)
+ * @version 1
+ */
 public class Parser implements Job {
     private static final Logger LOGGER = Logger.getLogger(Parser.class);
     private final SimpleDateFormat format = new SimpleDateFormat("d MMM yy, HH:mm", new Locale("ru", "RU"));
     private final String url = "http://www.sql.ru/forum/job-offers/";
     private final String propertyPath = "/app.properties";
 
+    /**
+     * Required method for implementation of Job interface to start some job.
+     * @param var1 specified parameters for start.
+     * @throws JobExecutionException can throw this exception.
+     */
     public void execute(JobExecutionContext var1) throws JobExecutionException {
         LOGGER.info("Start application!");
         parse();
         LOGGER.info("Closing app");
     }
 
+    /**
+     * Method for parsing http://www.sql.ru/forum/job-offers/
+     * Looks for properties(connection to db), init connection, add vacancies from date of previous added vacancy till now.
+     */
     public void parse() {
         try (InputStream in = getClass().getResourceAsStream(propertyPath); UtilsDB dbUtils = new UtilsDB()) {
             Properties props = new Properties();
@@ -43,6 +62,12 @@ public class Parser implements Job {
         }
     }
 
+    /**
+     * Get get vacancies from last update time.
+     * @param lastUpdateBefore lust update date.
+     * @return list of finded vacancies.
+     * @throws IOException signal that something occurs with I/O channels.
+     */
     private List<Vacancy> getVacancies(Timestamp lastUpdateBefore) throws IOException {
         Document doc;
         String desc;
@@ -83,6 +108,10 @@ public class Parser implements Job {
         return vacancies;
     }
 
+    /**
+     * Print list of vacancies to stdout.
+     * @param vacancies list of vacancies.
+     */
     private void printVacancyList(List<Vacancy> vacancies) {
         vacancies.forEach(new Consumer<Vacancy>() {
             int counter = 1;
@@ -93,6 +122,11 @@ public class Parser implements Job {
         });
     }
 
+    /**
+     * Reference to vacancy.
+     * @param href given reference to vacancy.
+     * @return description of vacancy as String.
+     */
     private String getDesc(String href) {
         StringBuilder sb = new StringBuilder();
         String s;
@@ -114,6 +148,11 @@ public class Parser implements Job {
         return sb.toString();
     }
 
+    /**
+     * Gatting timestamp from string.
+     * @param date given date.
+     * @return timestam from string.
+     */
     private Timestamp getTimestamp(String date) {
         LOGGER.debug("Get timestamp from String date");
         Calendar calendar = Calendar.getInstance();
